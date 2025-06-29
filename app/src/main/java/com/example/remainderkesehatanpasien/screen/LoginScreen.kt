@@ -17,9 +17,9 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.ArrowBackIosNew
 import androidx.compose.material.icons.filled.Email
 import androidx.compose.material.icons.filled.Lock
 import androidx.compose.material.icons.filled.Visibility
@@ -33,6 +33,7 @@ import androidx.compose.material3.OutlinedButton
 import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -40,30 +41,54 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontStyle
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.input.KeyboardType
+import androidx.compose.ui.text.input.PasswordVisualTransformation
+import androidx.compose.ui.text.input.VisualTransformation
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.style.TextDecoration
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.hilt.navigation.compose.hiltViewModel
 import com.example.remainderkesehatanpasien.component.CustomTextField
+import com.example.remainderkesehatanpasien.presentation.auth.AuthUiEvent
+import com.example.remainderkesehatanpasien.presentation.auth.AuthViewModel
+import com.example.remainderkesehatanpasien.presentation.auth.LoginFormEvent
 import com.example.remainderkesehatanpasien.ui.theme.RemainderKesehatanPasienTheme
-
+import kotlinx.coroutines.flow.collectLatest
 
 @Composable
 fun LoginScreen(
     onLoginClicked: () -> Unit,
     onTextHereClicked: () -> Unit,
-    onBackButtonClicked: () -> Unit
-
+    viewModel: AuthViewModel = hiltViewModel()
 ) {
 
-    var email by remember{ mutableStateOf( "") }
-    var password by remember{ mutableStateOf("") }
-    var passwordVisibility by remember { mutableStateOf(false) }
+    val emailState = viewModel.loginEmail
+    val passwordState = viewModel.loginPassword
+    var passwordVisibility by remember { mutableStateOf(false) } // State untuk visibility password
 
+    val context = LocalContext.current
+
+    LaunchedEffect(key1 = true) {
+        viewModel.uiEvent.collectLatest { event ->
+            when (event) {
+                is AuthUiEvent.ShowSnackbar -> {
+                    // Gunakan Snackbar atau Toast untuk pesan error
+                    // Untuk kesederhanaan, kita akan pakai Toast dulu seperti di AddNoteScreen
+                    android.widget.Toast.makeText(context, event.message, android.widget.Toast.LENGTH_SHORT).show()
+                }
+                AuthUiEvent.LoginSuccess -> {
+                    onLoginClicked() // Navigasi ke Dashboard jika login sukses
+                }
+                else -> Unit // Handle event lain jika ada
+            }
+        }
+    }
 
     Column(
         modifier = Modifier
@@ -73,17 +98,6 @@ fun LoginScreen(
             .padding(16.dp)
             .background(MaterialTheme.colorScheme.background)
         ) {
-
-        Icon(
-            imageVector = Icons.Default.ArrowBackIosNew,
-            contentDescription = "Back",
-            modifier = Modifier
-                .padding(horizontal = 8.dp, vertical = 14.dp)
-                .clickable {
-                    onBackButtonClicked()
-                }
-        )
-
         Text(
             text = "Masuk",
             style = MaterialTheme.typography.headlineMedium.copy(
@@ -100,24 +114,23 @@ fun LoginScreen(
             horizontalAlignment = Alignment.CenterHorizontally
         ) {
             CustomTextField(
-                value = email,
-                onValueChange = {email = it},
+                value = emailState.text,
+                onValueChange = { viewModel.onLoginEvent(LoginFormEvent.EnteredEmail(it)) },
                 placeholder = "Email",
                 icon = Icons.Default.Email,
                 contentDesc = "Email"
             )
-            if (email.isNotEmpty() && !android.util.Patterns.EMAIL_ADDRESS.matcher(email).matches()){
+            emailState.error?.let { error ->
                 Text(
-                    text = "Email tidak valid",
+                    text = error,
                     color = Color.Red,
-                    modifier = Modifier
-                        .padding(horizontal = 8.dp)
+                    modifier = Modifier.padding(horizontal = 8.dp)
                 )
             }
 
             OutlinedTextField(
-                value = password,
-                onValueChange = {password = it},
+                value = passwordState.text,
+                onValueChange = { viewModel.onLoginEvent(LoginFormEvent.EnteredPassword(it)) },
                 placeholder = {Text("Password", color = Color.LightGray)},
                 leadingIcon = {
                     Icon(
@@ -126,6 +139,8 @@ fun LoginScreen(
                         tint = Color.LightGray
                     )
                 },
+                keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Password),
+                visualTransformation = if (passwordVisibility) VisualTransformation.None else PasswordVisualTransformation(),
                 modifier = Modifier
                     .fillMaxWidth()
                     .padding(horizontal = 8.dp, vertical = 16.dp)
@@ -138,34 +153,24 @@ fun LoginScreen(
                 trailingIcon = {
                     Icon(
                         imageVector = if (passwordVisibility) Icons.Default.Visibility else Icons.Default.VisibilityOff,
-                        contentDescription = "Visibility is wheter is true",
+                        contentDescription = "Password visibility",
                         tint = Color.LightGray,
+                        modifier = Modifier.clickable { passwordVisibility = !passwordVisibility } // Toggle visibility
                     )
                 }
             )
-            if (password.isNotEmpty() && password.length < 6){
+            //password error akan ditampilkan di bawah textfield
+            passwordState.error?.let{error->
                 Text(
-                    text = "Password minimal 6 karakter",
+                    text = error,
                     color = Color.Red,
-                    modifier = Modifier
-                        .padding(horizontal = 8.dp)
+                    modifier = Modifier.padding(horizontal = 8.dp)
                 )
             }
 
-            Text(
-                text = "Lupa password?",
-                color = Color.Red,
-                fontStyle = FontStyle.Normal,
-                fontWeight = FontWeight.SemiBold,
-                textAlign = TextAlign.End,
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .padding(horizontal = 8.dp)
-
-            )
             Button(
                 onClick = {
-                    onLoginClicked()
+                    viewModel.onLoginEvent(LoginFormEvent.Login)
                 },
                 modifier = Modifier
                     .fillMaxWidth()
@@ -187,56 +192,6 @@ fun LoginScreen(
                     fontWeight = FontWeight.Bold,
                     modifier = Modifier
                         .padding(8.dp))
-            }
-
-            Row(
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .padding(horizontal = 8.dp, vertical = 16.dp),
-                verticalAlignment = Alignment.CenterVertically
-            ){
-                Divider(
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .weight(1f)
-                )
-                Text(
-                    text = "atau Masuk dengan",
-                    modifier = Modifier
-                        .padding(horizontal = 16.dp),
-                    color = Color.LightGray,
-                    fontStyle = FontStyle.Normal
-
-                    )
-                Divider(
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .weight(1f)
-                )
-            }
-
-            Row(
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .padding(horizontal = 8.dp, vertical = 16.dp),
-                horizontalArrangement = Arrangement.spacedBy(8.dp)
-
-            ){
-                OutlinedButton(
-                    onClick = { },
-                    modifier = Modifier
-                        .weight(1f),
-                    shape = RoundedCornerShape(12.dp),
-                    border = BorderStroke(
-                        width = 2.dp,
-                        color = Color.LightGray
-                    )
-                ) {
-                    Image(painter = painterResource(id = R.drawable.google),
-                        contentDescription = "Google",
-                        modifier = Modifier.size(50.dp)
-                    )
-                }
             }
 
             Spacer(modifier = Modifier.height(16.dp))
@@ -276,8 +231,7 @@ fun LoginPreview() {
     RemainderKesehatanPasienTheme(darkTheme = false) {
         LoginScreen(
             onLoginClicked = {},
-            onTextHereClicked = {},
-            onBackButtonClicked = {}
+            onTextHereClicked = {}
         )
     }
 }

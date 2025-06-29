@@ -1,0 +1,63 @@
+package com.example.remainderkesehatanpasien.presentation.reminder
+
+import androidx.compose.runtime.State
+import androidx.compose.runtime.mutableStateOf
+import androidx.lifecycle.SavedStateHandle
+import androidx.lifecycle.ViewModel
+import androidx.lifecycle.viewModelScope
+import androidx.lifecycle.viewmodel.compose.viewModel
+import com.example.remainderkesehatanpasien.data.alarm.ReminderScheduler
+import com.example.remainderkesehatanpasien.data.local.entity.Reminder
+import com.example.remainderkesehatanpasien.domain.usecase.AddReminderUseCase
+import com.example.remainderkesehatanpasien.domain.usecase.DeleteReminderUseCase
+import com.example.remainderkesehatanpasien.domain.usecase.GetRemindersUseCase
+import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.coroutines.flow.MutableSharedFlow
+import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.StateFlow
+import kotlinx.coroutines.flow.asSharedFlow
+import kotlinx.coroutines.flow.asStateFlow
+import kotlinx.coroutines.flow.launchIn
+import kotlinx.coroutines.flow.onEach
+import kotlinx.coroutines.launch
+import javax.inject.Inject
+
+// State untuk menampung daftar pengingat
+data class ReminderListState(
+    val reminder: List<Reminder> = emptyList()
+)
+
+// Event dari UI ke ViewModel
+sealed class ReminderEvent{
+    data class OnDeleteReminder(val reminder: Reminder) : ReminderEvent()
+    // Event lain akan kita tambahkan nanti (misal: OnSaveReminder)
+}
+
+@HiltViewModel
+class ReminderViewModel @Inject constructor(
+    private val getRemindersUseCase: GetRemindersUseCase,
+    private val deleteReminderUseCase: DeleteReminderUseCase,
+    savedStateHandle: SavedStateHandle
+    ) : ViewModel(){
+
+    private val _state = MutableStateFlow(ReminderListState())
+    val state: StateFlow<ReminderListState> = _state.asStateFlow()
+
+    val category: String = savedStateHandle.get<String>("category") ?: "UMUM"
+
+    init {
+        getRemindersUseCase(category).onEach { reminderList ->
+            _state.value = state.value.copy(reminder = reminderList)
+        }.launchIn(viewModelScope)
+    }
+
+    fun onEvent(event: ReminderEvent) {
+        when (event) {
+            is ReminderEvent.OnDeleteReminder -> {
+                viewModelScope.launch {
+                    deleteReminderUseCase(event.reminder)
+                }
+            }
+        }
+    }
+}

@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "978725679483",
+    "project_id": "remainder-kesehatan-pasien",
+    "storage_bucket": "remainder-kesehatan-pasien.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:978725679483:android:75265cf110d9ab22394dde",
+        "android_client_info": {
+          "package_name": "com.example.remainderkesehatanpasien"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAABA8ZGjD04eBaOFVBUO3UmYCp5fO0C04"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

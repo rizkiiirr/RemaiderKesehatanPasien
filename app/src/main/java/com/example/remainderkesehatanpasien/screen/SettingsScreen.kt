@@ -19,13 +19,21 @@ import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.AccountCircle
 import androidx.compose.material.icons.filled.ArrowBackIosNew
+import androidx.compose.material.icons.filled.ExitToApp
+import androidx.compose.material.icons.filled.Lock
+import androidx.compose.material.icons.filled.Notifications
+import androidx.compose.material.icons.filled.Palette
 import androidx.compose.material.icons.filled.PlayArrow
 import androidx.compose.material.icons.filled.Search
+import androidx.compose.material3.Button
+import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.Switch
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextField
 import androidx.compose.material3.TextFieldDefaults
@@ -47,6 +55,7 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.constraintlayout.compose.ConstraintLayout
+import androidx.hilt.navigation.compose.hiltViewModel
 import com.example.remainderkesehatanpasien.R
 import com.example.remainderkesehatanpasien.ui.theme.RemainderKesehatanPasienTheme
 
@@ -54,7 +63,14 @@ import com.example.remainderkesehatanpasien.ui.theme.RemainderKesehatanPasienThe
 fun SettingsScreen(
     onProfileClicked: () -> Unit,
     onHomeClicked: () -> Unit,
+    darkMode: Boolean,
+    onToggleDarkMode: (Boolean) -> Unit,
+    onLoginSecurityClicked: () -> Unit,
+    onNotificationsEnabled: (Boolean) -> Unit,
+    onLogoutClicked: () -> Unit,
 ){
+    var notificationsEnabled by rememberSaveable { mutableStateOf(true) }
+
     Column (
         Modifier
             .fillMaxSize()
@@ -134,90 +150,61 @@ fun SettingsScreen(
             }
         }
 
-        var searchText by rememberSaveable{
-            mutableStateOf("")
-        }
-        TextField(
-            value = searchText,
-            onValueChange = {searchText = it},
-            label = {Text(text = "Pencarian...")},
-            leadingIcon = {
-                Icon(
-                    imageVector = Icons.Default.Search,
-                    contentDescription = null,
-                    modifier = Modifier
-                        .size(38.dp)
-                        .padding(end = 6.dp)
-                )
-            },
-            shape = RoundedCornerShape(12.dp),
-            colors = TextFieldDefaults.colors(
-                unfocusedContainerColor = Color.White,
-                focusedContainerColor = Color.White,
-                focusedPlaceholderColor = Color.White
-            ),
-            modifier = Modifier
-                .fillMaxWidth()
-                .height(70.dp)
-                .padding(top = 24.dp, end = 24.dp, start = 24.dp)
-                .shadow(3.dp, shape = RoundedCornerShape(50.dp))
-                .background(Color.White, CircleShape)
+        Spacer(modifier = Modifier.height(24.dp))
+
+        // Bagian Akun
+        SettingCategoryHeader("Akun")
+        SettingsItem(
+            icon = Icons.Default.AccountCircle,
+            mainText = "Info Akun",
+            onClick = onProfileClicked // Navigasi ke halaman profil
+        )
+        SettingsItem(
+            icon = Icons.Default.Lock,
+            mainText = "Login dan Keamanan",
+            onClick = onLoginSecurityClicked // Navigasi ke halaman ubah password
         )
 
-        ConstraintLayout(
-            modifier = Modifier
-                .fillMaxWidth()
-                .padding(top = 24.dp, end = 24.dp, start = 24.dp)
-                .shadow(5.dp, shape = RoundedCornerShape(10.dp))
-                .height(150.dp)
-                .background(Color.Red)
+        // Bagian Preferensi
+        SettingCategoryHeader("Preferensi")
+        SettingsSwitchItem(
+            icon = Icons.Default.Palette,
+            mainText = "Mode Gelap",
+            checked = darkMode,
+            onCheckedChange = { isChecked -> onToggleDarkMode(isChecked) }
+        )
+
+        // Bagian Keluar
+        Spacer(modifier = Modifier.height(24.dp)) // Tambahkan jarak
+        SettingCategoryHeader("Lainnya") // Kategori baru untuk Logout
+        SettingsItem(
+            icon = Icons.Default.ExitToApp, // Ikon keluar
+            mainText = "Keluar Akun",
+            onClick = onLogoutClicked // <-- Panggil fungsi logout
+        )
+
+        Button(
+            onClick = { throw RuntimeException("Test Crash dari Tombol Pengaturan") },
+            modifier = Modifier.padding(16.dp),
+            colors = ButtonDefaults.buttonColors(containerColor = MaterialTheme.colorScheme.error)
         ) {
-                Column {
-                    Text(
-                        text = "Lihat Profil Anda",
-                        color = Color.White,
-                        fontSize = 16.sp,
-                        fontStyle = FontStyle.Normal,
-                        fontWeight = FontWeight.Bold
-                    )
-                }
-                    Image(
-                        painter = painterResource(id = R.drawable.account_box),
-                        contentDescription = null,
-                        modifier = Modifier
-                            .width(100.dp)
-                            .padding(top = 20.dp)
-                            .height(100.dp)
-                            .clickable {
-                                onProfileClicked()
-                            }
-                    )
+            Text("Tes Crash Aplikasi")
         }
-        ConstraintLayout() {
-            Column(
-                modifier = Modifier
-                    .padding(horizontal = 14.dp)
-                    .padding(top = 10.dp)
-            ) {
-                Text(
-                    text = "Umum",
-                    color = Color.Black,
-                    fontSize = 20.sp,
-                    fontStyle = FontStyle.Normal,
-                    fontWeight = FontWeight.Bold,
-                    modifier = Modifier
-                        .padding(vertical = 8.dp)
-                )
-            }
-        }
-
-        SettingsItem(icon = Icons.Default.PlayArrow, "Pengaturan 1", onClick = {})
-        SettingsItem(icon = Icons.Default.PlayArrow, "Pengaturan 2", onClick = {})
-        SettingsItem(icon = Icons.Default.PlayArrow, "Pengaturan 3", onClick = {})
-        SettingsItem(icon = Icons.Default.PlayArrow, "Pengaturan 4", onClick = {})
-        SettingsItem(icon = Icons.Default.PlayArrow, "Pengaturan 5", onClick = {})
-
     }
+}
+
+@Composable
+fun SettingCategoryHeader(title: String) {
+    Text(
+        text = title,
+        color = Color.Black,
+        fontSize = 20.sp,
+        fontStyle = FontStyle.Normal,
+        fontWeight = FontWeight.Bold,
+        modifier = Modifier
+            .fillMaxWidth()
+            .padding(horizontal = 14.dp, vertical = 16.dp)
+    )
 }
 
 @Composable
@@ -227,69 +214,109 @@ fun SettingsItem(
     onClick:()->Unit
 ){
     Card(
-        onClick = {
-            onClick()
-        },
+        onClick = onClick,
         modifier = Modifier
-            .padding(bottom = 8.dp)
+            .padding(bottom = 8.dp, start = 14.dp, end = 14.dp) // Sesuaikan padding
             .fillMaxWidth(),
-        colors = CardDefaults.cardColors(containerColor = Color.Red),
-        elevation = CardDefaults.cardElevation(defaultElevation = 0.dp)
+        colors = CardDefaults.cardColors(containerColor = MaterialTheme.colorScheme.surfaceVariant), // Sesuaikan warna
+        elevation = CardDefaults.cardElevation(defaultElevation = 2.dp), // Beri sedikit elevasi
+        shape = RoundedCornerShape(8.dp) // Sudut membulat
     ) {
         Row(
             modifier = Modifier
-                .padding(vertical = 10.dp, horizontal = 14.dp),
+                .padding(vertical = 14.dp, horizontal = 16.dp), // Sesuaikan padding
             verticalAlignment = Alignment.CenterVertically,
             horizontalArrangement = Arrangement.SpaceBetween
         ){
             Row(verticalAlignment = Alignment.CenterVertically) {
-                Box(
-                    modifier = Modifier
-                        .size(34.dp)
-                        .clip(shape = MaterialTheme.shapes.medium)
-                        .background(color = Color.Gray)
-                ) {
-                    Icon(
-                        painter = painterResource(id = R.drawable.user),
-                        contentDescription = "",
-                        tint = Color.Black,
-                        modifier = Modifier
-                            .padding(8.dp)
-                    )
-                }
-
-                Spacer(modifier = Modifier
-                    .width(14.dp)
+                // Gunakan Icon langsung dari ImageVector
+                Icon(
+                    imageVector = icon,
+                    contentDescription = null, // Content description for accessibility
+                    tint = MaterialTheme.colorScheme.primary, // Warna ikon
+                    modifier = Modifier.size(24.dp)
                 )
 
-                Column{
-                    Text(
-                        text = mainText,
-                        fontStyle = FontStyle.Normal,
-                        color = Color.White,
-                        fontSize = 14.sp,
-                        fontWeight = FontWeight.Bold
-                    )
-                }
+                Spacer(modifier = Modifier.width(16.dp))
+
+                Text(
+                    text = mainText,
+                    style = MaterialTheme.typography.bodyLarge, // Gaya teks
+                    color = MaterialTheme.colorScheme.onSurfaceVariant,
+                    fontWeight = FontWeight.Normal
+                )
             }
             Icon(
-                imageVector = icon,
-                contentDescription = null,
-                modifier = Modifier
-                    .size(38.dp)
-                    .padding(end = 6.dp)
+                painter = painterResource(id = R.drawable.ic_arrow_forward), // Asumsi Anda punya ikon panah maju
+                contentDescription = "Forward",
+                tint = MaterialTheme.colorScheme.onSurfaceVariant.copy(alpha = 0.6f),
+                modifier = Modifier.size(20.dp)
             )
         }
     }
 }
 
+@Composable
+fun SettingsSwitchItem(
+    icon: ImageVector,
+    mainText: String,
+    checked: Boolean,
+    onCheckedChange: (Boolean) -> Unit
+) {
+    Card(
+        modifier = Modifier
+            .padding(bottom = 8.dp, start = 14.dp, end = 14.dp)
+            .fillMaxWidth(),
+        colors = CardDefaults.cardColors(containerColor = MaterialTheme.colorScheme.surfaceVariant),
+        elevation = CardDefaults.cardElevation(defaultElevation = 2.dp),
+        shape = RoundedCornerShape(8.dp)
+    ) {
+        Row(
+            modifier = Modifier
+                .padding(vertical = 14.dp, horizontal = 16.dp),
+            verticalAlignment = Alignment.CenterVertically,
+            horizontalArrangement = Arrangement.SpaceBetween
+        ){
+            Row(verticalAlignment = Alignment.CenterVertically) {
+                Icon(
+                    imageVector = icon,
+                    contentDescription = null,
+                    tint = MaterialTheme.colorScheme.primary,
+                    modifier = Modifier.size(24.dp)
+                )
+
+                Spacer(modifier = Modifier.width(16.dp))
+
+                Text(
+                    text = mainText,
+                    style = MaterialTheme.typography.bodyLarge,
+                    color = MaterialTheme.colorScheme.onSurfaceVariant,
+                    fontWeight = FontWeight.Normal
+                )
+            }
+            Switch(
+                checked = checked,
+                onCheckedChange = onCheckedChange,
+                modifier = Modifier.padding(start = 8.dp)
+            )
+        }
+    }
+}
+
+
 @Preview(showBackground = true, showSystemUi = true)
 @Composable
 fun SettingsPreview(){
-    RemainderKesehatanPasienTheme(darkTheme = false) {
+    var previewDarkMode by rememberSaveable { mutableStateOf(false) }
+    RemainderKesehatanPasienTheme(darkTheme = previewDarkMode) {
         SettingsScreen(
             onProfileClicked = {},
-            onHomeClicked = {}
+            onHomeClicked = {},
+            darkMode = previewDarkMode,
+            onToggleDarkMode = { isChecked -> previewDarkMode = isChecked }, // <-- PERBAIKI DI SINI
+            onLoginSecurityClicked = {},
+            onNotificationsEnabled = { isEnabled -> /* do nothing for preview */ }, // <-- PERBAIKI DI SINI
+            onLogoutClicked = {}
         )
     }
 }

@@ -10,6 +10,7 @@ import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
@@ -25,6 +26,7 @@ import androidx.compose.material3.Text
 import androidx.compose.material3.TextField
 import androidx.compose.material3.TextFieldDefaults
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.saveable.rememberSaveable
@@ -38,25 +40,36 @@ import androidx.compose.ui.text.font.FontStyle
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import androidx.hilt.navigation.compose.hiltViewModel
 import coil.annotation.ExperimentalCoilApi
+import coil.compose.AsyncImage
 import coil.compose.rememberImagePainter
 import com.example.remainderkesehatanpasien.R
+import com.example.remainderkesehatanpasien.presentation.profile.ProfileFormEvent
+import com.example.remainderkesehatanpasien.presentation.profile.ProfileUiEvent
+import com.example.remainderkesehatanpasien.presentation.profile.ProfileViewModel
 import com.example.remainderkesehatanpasien.ui.theme.RemainderKesehatanPasienTheme
+import kotlinx.coroutines.flow.collectLatest
 
 @Composable
 fun ProfileScreen(
-    onHomeClicked: () -> Unit
+    onHomeClicked: () -> Unit,
+    viewModel: ProfileViewModel = hiltViewModel()
 ){
-    val notification = rememberSaveable { mutableStateOf("") }
-    if (notification.value.isNotEmpty()){
-        Toast.makeText(LocalContext.current, notification.value, Toast.LENGTH_LONG).show()
-        notification.value = ""
+    val context = LocalContext.current
+
+    LaunchedEffect(key1 = true) {
+        viewModel.uiEvent.collectLatest { event ->
+            when (event) {
+                is ProfileUiEvent.ShowSnackbar -> {
+                    Toast.makeText(context, event.message, Toast.LENGTH_LONG).show()
+                }
+                ProfileUiEvent.SaveProfileSuccess -> {
+                    onHomeClicked() // Kembali ke Dashboard setelah simpan
+                }
+            }
+        }
     }
-
-    var name by rememberSaveable { mutableStateOf("Nama Anda") }
-    var username by rememberSaveable { mutableStateOf("Nama Akun Anda") }
-    var bio by rememberSaveable { mutableStateOf("Bio Anda") }
-
     Column(modifier = Modifier
         .verticalScroll(rememberScrollState())
         .padding(8.dp)
@@ -72,21 +85,21 @@ fun ProfileScreen(
                 fontStyle = FontStyle.Normal,
                 fontWeight = FontWeight.SemiBold,
                 modifier = Modifier
-                    .clickable { notification.value = "Dibatalkan" }
+                    .clickable { onHomeClicked() }
             )
             Text(
                 text = "Simpan",
                 fontStyle = FontStyle.Normal,
                 fontWeight = FontWeight.SemiBold,
                 modifier = Modifier
-                    .clickable { notification.value = "Profile telah berubah"}
-                    .clickable {
-                        onHomeClicked()
-                    }
+                    .clickable { viewModel.onEvent(ProfileFormEvent.SaveProfile) }
             )
         }
 
-        ProfileImage()
+        ProfileImagePicker(
+            imageUrl = viewModel.profileImageUrl, // Menggunakan URL gambar dari ViewModel
+            onImageSelected = { uri -> viewModel.onEvent(ProfileFormEvent.UpdateProfileImage(uri.toString())) }
+        )
 
         Row(modifier = Modifier
             .fillMaxWidth()
@@ -94,20 +107,21 @@ fun ProfileScreen(
         verticalAlignment = Alignment.CenterVertically
             ){
                 Text(
-                    text = "Nama",
+                    text = "Nama Lengkap",
                     fontStyle = FontStyle.Normal,
                     modifier = Modifier
                         .width(100.dp)
                 )
             TextField(
-                value = name,
-                onValueChange = {name = it},
+                value = viewModel.name,
+                onValueChange = { viewModel.onEvent(ProfileFormEvent.EnteredName(it)) },
                 colors = TextFieldDefaults.colors(
                     focusedContainerColor = Color.Transparent,
                     unfocusedContainerColor = Color.Transparent,
-                    focusedTextColor = Color.Black,
-                    unfocusedTextColor = Color.DarkGray
-                )
+                    focusedTextColor = MaterialTheme.colorScheme.onBackground,
+                    unfocusedTextColor = MaterialTheme.colorScheme.onBackground.copy(alpha = 0.7f)
+                ),
+                modifier = Modifier.weight(1f)
             )
         }
 
@@ -123,61 +137,57 @@ fun ProfileScreen(
                     .width(100.dp)
             )
             TextField(
-                value = username,
-                onValueChange = {username= it},
-                colors = TextFieldDefaults.colors(
+                value = viewModel.username,
+                onValueChange = { viewModel.onEvent(ProfileFormEvent.EnteredUsername(it)) },                colors = TextFieldDefaults.colors(
                     focusedContainerColor = Color.Transparent,
                     unfocusedContainerColor = Color.Transparent,
-                    focusedTextColor = Color.Black,
-                    unfocusedTextColor = Color.DarkGray
-                )
+                    focusedTextColor = MaterialTheme.colorScheme.onBackground,
+                    unfocusedTextColor = MaterialTheme.colorScheme.onBackground.copy(alpha = 0.7f)
+                ),
+                modifier = Modifier.weight(1f)
             )
         }
 
         Row(modifier = Modifier
             .fillMaxWidth()
-            .padding(8.dp),
-        verticalAlignment = Alignment.Top
+            .padding(start = 4.dp, end = 4.dp),
+            verticalAlignment = Alignment.CenterVertically
         ){
             Text(
-                text = "Bio",
+                text = "Email",
                 fontStyle = FontStyle.Normal,
                 modifier = Modifier
-                    .width(100.dp)
-                    .padding(top = 8.dp)
+                    .width(120.dp)
             )
             TextField(
-                value = bio,
-                onValueChange = {bio = it},
+                value = viewModel.email,
+                onValueChange = { viewModel.onEvent(ProfileFormEvent.EnteredEmail(it)) },
+                readOnly = true,
                 colors = TextFieldDefaults.colors(
                     focusedContainerColor = Color.Transparent,
                     unfocusedContainerColor = Color.Transparent,
-                    focusedTextColor = Color.Black,
-                    unfocusedTextColor = Color.DarkGray
+                    focusedTextColor = MaterialTheme.colorScheme.onBackground,
+                    unfocusedTextColor = MaterialTheme.colorScheme.onBackground.copy(alpha = 0.7f),
+                    disabledIndicatorColor = Color.Transparent,
+                    unfocusedIndicatorColor = Color.Transparent,
+                    focusedIndicatorColor = Color.Transparent
                 ),
-                singleLine = false,
-                modifier = Modifier
-                    .height(150.dp)
+                modifier = Modifier.weight(1f)
             )
         }
     }
 }
 
-@OptIn(ExperimentalCoilApi::class)
+// Komponen terpisah untuk Image Picker
 @Composable
-fun ProfileImage(){
-    val imageUri = rememberSaveable { mutableStateOf("") }
-    val painter = rememberImagePainter(
-        if (imageUri.value.isEmpty())
-            R.drawable.user
-        else
-            imageUri.value
-    )
+fun ProfileImagePicker(
+    imageUrl: String?, // Sekarang menerima String URL gambar
+    onImageSelected: (Uri) -> Unit // Menerima Uri dari ActivityResultLauncher
+){
     val launcher = rememberLauncherForActivityResult(
         contract = ActivityResultContracts.GetContent()
-    ){uri: Uri? ->
-        uri?.let {imageUri.value = it.toString()}
-
+    ){ uri: Uri? ->
+        uri?.let { onImageSelected(it) }
     }
 
     Column(
@@ -191,18 +201,23 @@ fun ProfileImage(){
                 .padding(8.dp)
                 .size(100.dp)
         ){
-            Image(painter = painter, contentDescription = null,
+            AsyncImage( // Menggunakan AsyncImage dari Coil
+                model = imageUrl ?: R.drawable.user, // Tampilkan gambar dari URL internal atau placeholder
+                contentDescription = "Profile Picture",
                 modifier = Modifier
-                    .wrapContentSize()
-                    .clickable { launcher.launch("image/*")},
+                    .fillMaxSize() // Isi Card
+                    .clickable { launcher.launch("image/*")}, // Klik untuk memilih gambar
                 contentScale = ContentScale.Crop
-                )
+            )
         }
         Text(
-            text = "Ganti Gambar Profil"
+            text = "Ganti Gambar Profil",
+            color = MaterialTheme.colorScheme.primary,
+            fontWeight = FontWeight.SemiBold
         )
     }
 }
+
 
 @Preview(showBackground = true, showSystemUi = true)
 @Composable

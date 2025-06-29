@@ -17,10 +17,10 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.AccountCircle
-import androidx.compose.material.icons.filled.ArrowBackIosNew
 import androidx.compose.material.icons.filled.Email
 import androidx.compose.material.icons.filled.Lock
 import androidx.compose.material.icons.filled.Visibility
@@ -34,6 +34,7 @@ import androidx.compose.material3.OutlinedButton
 import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -41,28 +42,56 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontStyle
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.input.KeyboardType
+import androidx.compose.ui.text.input.PasswordVisualTransformation
+import androidx.compose.ui.text.input.VisualTransformation
 import androidx.compose.ui.text.style.TextDecoration
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.hilt.navigation.compose.hiltViewModel
+import androidx.navigation.NavController
+import androidx.navigation.compose.rememberNavController
 import com.example.remainderkesehatanpasien.component.CustomTextField
+import com.example.remainderkesehatanpasien.presentation.auth.AuthUiEvent
+import com.example.remainderkesehatanpasien.presentation.auth.AuthViewModel
+import com.example.remainderkesehatanpasien.presentation.auth.RegisterFormEvent
 import com.example.remainderkesehatanpasien.ui.theme.RemainderKesehatanPasienTheme
+import kotlinx.coroutines.flow.collectLatest // Import collectLatest
 
 @Composable
 fun RegisterScreen(
-    onBackButtonClicked: () -> Unit,
+    navController: NavController,
     onRegisterButtonClicked: () -> Unit,
-    onTextHereClicked: () -> Unit
+    onTextHereClicked: () -> Unit,
+    viewModel: AuthViewModel = hiltViewModel()
 ) {
+    val fullNameState = viewModel.registerFullName
+    val usernameState = viewModel.registerUsername
+    val emailState = viewModel.registerEmail
+    val passwordState = viewModel.registerPassword
+    var passwordVisibility by remember { mutableStateOf(false) } // State untuk visibility password
 
-    var username by remember { mutableStateOf("") }
-    var email by remember{ mutableStateOf( "") }
-    var password by remember{ mutableStateOf("") }
-    var passwordVisibility by remember { mutableStateOf(false) }
+    val context = LocalContext.current
 
+    LaunchedEffect(key1 = true) {
+        viewModel.uiEvent.collectLatest { event ->
+            when (event) {
+                is AuthUiEvent.ShowSnackbar -> {
+                    android.widget.Toast.makeText(context, event.message, android.widget.Toast.LENGTH_SHORT).show()
+                }
+                AuthUiEvent.RegistrationSuccess -> {
+                    // Setelah registrasi sukses, kembali ke halaman Login.
+                    navController.popBackStack()
+                }
+                else -> Unit // Handle event lain jika ada
+            }
+        }
+    }
 
     Column(
         modifier = Modifier
@@ -72,16 +101,6 @@ fun RegisterScreen(
             .verticalScroll(rememberScrollState())
             .background(MaterialTheme.colorScheme.background)
     ) {
-        Icon(
-            imageVector = Icons.Default.ArrowBackIosNew,
-            contentDescription = "Back",
-            modifier = Modifier
-                .padding(horizontal = 8.dp, vertical = 14.dp)
-                .clickable {
-                    onBackButtonClicked()
-                }
-        )
-
         Text(
             text = "Daftar",
             style = MaterialTheme.typography.headlineMedium.copy(
@@ -98,24 +117,54 @@ fun RegisterScreen(
             horizontalAlignment = Alignment.CenterHorizontally
         ) {
             CustomTextField(
-                value = username,
-                onValueChange = {username = it},
+                value = fullNameState.text,
+                onValueChange = { viewModel.onRegisterEvent(RegisterFormEvent.EnteredFullName(it)) },
+                placeholder = "Nama Lengkap",
+                icon = Icons.Default.AccountCircle,
+                contentDesc = "Name"
+            )
+            usernameState.error?.let { error ->
+                Text(
+                    text = error,
+                    color = Color.Red,
+                    modifier = Modifier.padding(horizontal = 8.dp)
+                )
+            }
+
+            CustomTextField(
+                value = usernameState.text,
+                onValueChange = { viewModel.onRegisterEvent(RegisterFormEvent.EnteredUsername(it)) },
                 placeholder = "Nama Akun",
                 icon = Icons.Default.AccountCircle,
                 contentDesc = "Username"
             )
+            usernameState.error?.let { error ->
+                Text(
+                    text = error,
+                    color = Color.Red,
+                    modifier = Modifier.padding(horizontal = 8.dp)
+                )
+            }
+
 
             CustomTextField(
-                value = email,
-                onValueChange = {email = it},
+                value = emailState.text,
+                onValueChange = { viewModel.onRegisterEvent(RegisterFormEvent.EnteredEmail(it)) },
                 placeholder = "Email",
                 icon = Icons.Default.Email,
                 contentDesc = "Email"
             )
+            emailState.error?.let { error ->
+                Text(
+                    text = error,
+                    color = Color.Red,
+                    modifier = Modifier.padding(horizontal = 8.dp)
+                )
+            }
 
             OutlinedTextField(
-                value = password,
-                onValueChange = {password = it},
+                value = passwordState.text,
+                onValueChange = { viewModel.onRegisterEvent(RegisterFormEvent.EnteredPassword(it)) },
                 placeholder = {Text("Password", color = Color.LightGray)},
                 leadingIcon = {
                     Icon(
@@ -124,6 +173,8 @@ fun RegisterScreen(
                         tint = Color.LightGray
                     )
                 },
+                keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Password), // <--- Tipe keyboard untuk password
+                visualTransformation = if (passwordVisibility) VisualTransformation.None else PasswordVisualTransformation(), // <--- Atur visibilitas
                 modifier = Modifier
                     .fillMaxWidth()
                     .padding(horizontal = 8.dp, vertical = 16.dp)
@@ -138,13 +189,21 @@ fun RegisterScreen(
                         imageVector = if (passwordVisibility) Icons.Default.Visibility else Icons.Default.VisibilityOff,
                         contentDescription = "Visibility is wheter is true",
                         tint = Color.LightGray,
+                        modifier = Modifier.clickable { passwordVisibility = !passwordVisibility } // Toggle visibility
                     )
                 }
             )
+            passwordState.error?.let { error ->
+                Text(
+                    text = error,
+                    color = Color.Red,
+                    modifier = Modifier.padding(horizontal = 8.dp)
+                )
+            }
 
             Button(
                 onClick = {
-                    onRegisterButtonClicked()
+                    viewModel.onRegisterEvent(RegisterFormEvent.Register) // Panggil event register ke ViewModel
                 },
                 modifier = Modifier
                     .fillMaxWidth()
@@ -168,53 +227,6 @@ fun RegisterScreen(
                         .padding(8.dp))
             }
 
-            Row(
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .padding(horizontal = 8.dp, vertical = 16.dp),
-                verticalAlignment = Alignment.CenterVertically
-            ){
-                Divider(
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .weight(1f)
-                )
-                Text(
-                    text = "atau Daftar dengan",
-                    fontStyle = FontStyle.Normal,
-                    modifier = Modifier
-                        .padding(horizontal = 16.dp),
-                    color = Color.LightGray
-                )
-                Divider(
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .weight(1f)
-                )
-            }
-
-            Row(
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .padding(horizontal = 8.dp, vertical = 16.dp),
-                horizontalArrangement = Arrangement.spacedBy(8.dp)
-
-            ){
-                OutlinedButton(
-                    onClick = {},
-                    modifier = Modifier.weight(1f),
-                    shape = RoundedCornerShape(12.dp),
-                    border = BorderStroke(
-                        width = 2.dp,
-                        color = Color.LightGray
-                    )
-                ) {
-                    Image(painter = painterResource(id = R.drawable.google),
-                        contentDescription = "Google",
-                        modifier = Modifier.size(50.dp)
-                    )
-                }
-            }
             Spacer(modifier = Modifier.height(16.dp))
 
             Row(
@@ -251,9 +263,9 @@ fun RegisterScreen(
 fun RegisterPreview() {
     RemainderKesehatanPasienTheme(darkTheme = false) {
         RegisterScreen(
+            navController = rememberNavController(), // Tambahkan ini untuk Preview
             onTextHereClicked = {},
             onRegisterButtonClicked = {},
-            onBackButtonClicked = {}
         )
     }
 }
