@@ -212,6 +212,12 @@ object AppModule {
 
     @Provides
     @Singleton
+    fun provideGetReminderUseCase(repository: ReminderRepository): GetReminderUseCase {
+        return GetReminderUseCase(repository)
+    }
+
+    @Provides
+    @Singleton
     fun provideDeleteReminderUseCase(repository: ReminderRepository): DeleteReminderUseCase {
         return DeleteReminderUseCase(repository)
     }

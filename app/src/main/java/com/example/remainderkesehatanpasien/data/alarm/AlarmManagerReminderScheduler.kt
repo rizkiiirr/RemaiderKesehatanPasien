@@ -36,11 +36,6 @@ class AlarmManagerReminderScheduler @Inject constructor(
                     reminder.reminderTime,
                     pendingIntent
                 )
-            } else {
-                // Jika tidak ada izin, Anda bisa arahkan pengguna ke Settings,
-                // atau setel alarm yang tidak tepat waktu sebagai fallback.
-                // Untuk saat ini, kita bisa abaikan jika tidak ada izin.
-                // Dalam aplikasi nyata, berikan pesan ke pengguna.
             }
         } else {
             // Untuk versi Android di bawah 12, kita bisa langsung setel alarm

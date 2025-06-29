@@ -160,7 +160,7 @@ fun NavigationApp(
                 route = Route.AddEditReminder.path,
                 arguments = listOf(
                     navArgument("category") { type = NavType.StringType },
-                    navArgument("reminderId") { type = NavType.IntType; defaultValue = 0 }
+                    navArgument("reminderId") { type = NavType.IntType; defaultValue = -1 }
                 )
             ) {
                 AddEditReminderScreen(navController = navController)

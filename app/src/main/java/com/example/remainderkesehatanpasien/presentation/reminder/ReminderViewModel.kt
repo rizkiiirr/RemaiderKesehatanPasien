@@ -45,6 +45,12 @@ class ReminderViewModel @Inject constructor(
 
     val category: String = savedStateHandle.get<String>("category") ?: "UMUM"
 
+    private val _showDeleteDialog = mutableStateOf(false)
+    val showDeleteDialog: State<Boolean> = _showDeleteDialog
+
+    private val _reminderToDelete = mutableStateOf<Reminder?>(null)
+    val reminderToDelete: State<Reminder?> = _reminderToDelete
+
     init {
         getRemindersUseCase(category).onEach { reminderList ->
             _state.value = state.value.copy(reminder = reminderList)
@@ -58,6 +64,27 @@ class ReminderViewModel @Inject constructor(
                     deleteReminderUseCase(event.reminder)
                 }
             }
+        }
+    }
+
+    fun onOpenDeleteDialog(reminder: Reminder) {
+        _reminderToDelete.value = reminder
+        _showDeleteDialog.value = true
+    }
+
+    // Fungsi untuk menutup dialog
+    fun onCloseDeleteDialog() {
+        _reminderToDelete.value = null
+        _showDeleteDialog.value = false
+    }
+
+    // Fungsi untuk mengkonfirmasi penghapusan
+    fun onConfirmDelete() {
+        viewModelScope.launch {
+            _reminderToDelete.value?.let { reminder ->
+                deleteReminderUseCase(reminder)
+            }
+            onCloseDeleteDialog() // Tutup dialog setelah selesai
         }
     }
 }

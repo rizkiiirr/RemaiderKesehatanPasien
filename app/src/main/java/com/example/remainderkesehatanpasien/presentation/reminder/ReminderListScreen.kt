@@ -1,5 +1,6 @@
 package com.example.remainderkesehatanpasien.presentation.reminder
 
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
@@ -15,6 +16,7 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Add
 import androidx.compose.material.icons.filled.ArrowBack
 import androidx.compose.material.icons.filled.Delete
+import androidx.compose.material3.AlertDialog
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.ExperimentalMaterial3Api
@@ -24,11 +26,15 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Icon
 import androidx.compose.material3.Text
+import androidx.compose.material3.TextButton
 import androidx.compose.material3.TopAppBar
 import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.font.FontWeight
@@ -50,10 +56,14 @@ fun ReminderListScreen(
     val state by viewModel.state.collectAsState()
     val category = viewModel.category
 
+    // --- LANGKAH 1: Tambahkan State untuk Mengontrol Dialog ---
+    var showDeleteDialog by remember { mutableStateOf(false) }
+    var reminderToDelete by remember { mutableStateOf<Reminder?>(null) }
+
     Scaffold(
         topBar = {
             TopAppBar(
-                title = {Text("Jadwal Pengingat")},
+                title = { Text(if (category == "OBAT") "Jadwal Minum Obat" else "Jadwal Konsultasi") },
                 colors = TopAppBarDefaults.topAppBarColors( // <-- Sesuaikan warna TopAppBar
                     containerColor = MaterialTheme.colorScheme.primary,
                     titleContentColor = MaterialTheme.colorScheme.onPrimary,
@@ -76,7 +86,7 @@ fun ReminderListScreen(
                         .replace("?reminderId={reminderId}", "")
                 )
             }, containerColor = MaterialTheme.colorScheme.secondary, // Warna FAB
-                contentColor = MaterialTheme.colorScheme.onSecondary
+               contentColor = MaterialTheme.colorScheme.onSecondary
             ) {
                 Icon(Icons.Default.Add, contentDescription = "Tambah Jadwal")
             }
@@ -93,18 +103,53 @@ fun ReminderListScreen(
             items(state.reminder) { reminder ->
                 ReminderItem(
                     reminder = reminder,
+                    // PERBAIKAN: Aksi saat item di-klik (untuk EDIT)
+                    onItemClick = {
+                        navController.navigate(
+                            Route.AddEditReminder.path
+                                .replace("{category}", reminder.category)
+                                .replace("{reminderId}", reminder.id.toString())
+                        )
+                    },
+                    // PERBAIKAN: Aksi saat tombol hapus di-klik
                     onDeleteClick = {
-                        viewModel.onEvent(ReminderEvent.OnDeleteReminder(reminder))
+                        reminderToDelete = reminder
+                        showDeleteDialog = true
                     }
                 )
             }
         }
+    }
+
+    if (showDeleteDialog) {
+        AlertDialog(
+            onDismissRequest = { showDeleteDialog = false },
+            title = { Text(text = "Konfirmasi Hapus") },
+            text = { Text(text = "Apakah Anda yakin ingin menghapus pengingat '${reminderToDelete?.title}'?") },
+            confirmButton = {
+                TextButton(
+                    onClick = {
+                        // Jika "Hapus" ditekan, baru kirim event ke ViewModel
+                        reminderToDelete?.let { viewModel.onEvent(ReminderEvent.OnDeleteReminder(it)) }
+                        showDeleteDialog = false
+                    }
+                ) {
+                    Text("Hapus")
+                }
+            },
+            dismissButton = {
+                TextButton(onClick = { showDeleteDialog = false }) {
+                    Text("Batal")
+                }
+            }
+        )
     }
 }
 
 @Composable
 fun ReminderItem(
     reminder: Reminder,
+    onItemClick: () -> Unit,
     onDeleteClick: () -> Unit
 ){
     // Fungsi untuk format waktu dari Long ke String
@@ -112,7 +157,9 @@ fun ReminderItem(
     val formattedTime = dateFormat.format(Date(reminder.reminderTime))
 
     Card(
-        modifier = Modifier.fillMaxWidth(),
+        modifier = Modifier
+            .fillMaxWidth()
+            .clickable(onClick = onItemClick),
         elevation = CardDefaults.cardElevation(defaultElevation = 2.dp),
         colors = CardDefaults.cardColors(containerColor = MaterialTheme.colorScheme.surfaceVariant) // Warna card
 
@@ -120,7 +167,7 @@ fun ReminderItem(
         Row(
             modifier = Modifier
                 .fillMaxWidth()
-                .padding(16.dp),
+                .padding(horizontal = 16.dp, vertical = 12.dp),
             verticalAlignment = Alignment.CenterVertically
         ){
             Column(
@@ -128,8 +175,7 @@ fun ReminderItem(
                     .weight(1f)
             ){
                 Text(
-                    text = reminder
-                        .title,
+                    text = reminder.title,
                     fontWeight = FontWeight.Bold,
                     color = MaterialTheme.colorScheme.onSurfaceVariant // Warna teks judul
 
@@ -150,15 +196,10 @@ fun ReminderItem(
                     color = MaterialTheme.colorScheme.onSurfaceVariant.copy(alpha = 0.7f) // Warna teks waktu
 
                 )
-                IconButton(
-                    onClick = onDeleteClick
-                ){
-                    Icon(
-                        Icons.Default.Delete
-                        , contentDescription = "Hapus Jadwal",
-                        tint = MaterialTheme.colorScheme.error // Warna ikon hapus
-                    )
-                }
+            }
+            // PERBAIKAN: IconButton dipisahkan dari Column teks
+            IconButton(onClick = onDeleteClick){
+                Icon(Icons.Default.Delete, contentDescription = "Hapus Jadwal")
             }
         }
     }

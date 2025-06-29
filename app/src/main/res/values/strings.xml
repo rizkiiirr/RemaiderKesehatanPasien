@@ -1,3 +1,7 @@
 <resources>
     <string name="app_name">Remainder Kesehatan Pasien</string>
+    <string name="reminder_message">Waktunya minum obat!</string>
+    <string name="reminder_description">Jangan sampai terlewat.</string>
+    <string name="reminder_channel_name">Pengingat Kesehatan</string>
+    <string name="reminder_channel_description">Notifikasi untuk jadwal obat dan konsultasi.</string>
 </resources>

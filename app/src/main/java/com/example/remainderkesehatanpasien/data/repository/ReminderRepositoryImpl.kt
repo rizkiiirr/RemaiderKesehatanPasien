@@ -14,6 +14,10 @@ class ReminderRepositoryImpl @Inject constructor(
         return dao.getRemindersByCategory(category)
     }
 
+    override suspend fun getReminderById(id: Int): Reminder? { // <-- TAMBAHKAN IMPLEMENTASI INI
+        return dao.getReminderById(id)
+    }
+
     override fun getAllReminders(): Flow<List<Reminder>> {
         return dao.getAllReminders()
     }

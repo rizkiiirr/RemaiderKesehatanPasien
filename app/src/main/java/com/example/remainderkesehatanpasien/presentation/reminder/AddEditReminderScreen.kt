@@ -206,7 +206,7 @@ fun AddEditReminderScreen(
                     color = MaterialTheme.colorScheme.onSurface
                 )
                 Switch(
-                    checked = state.isAllDay,
+                    checked = state.allDay,
                     onCheckedChange = { viewModel.onEvent(AddEditReminderEvent.OnAllDayToggle(it)) },
                     colors = SwitchDefaults.colors( // Sesuaikan warna switch
                         checkedThumbColor = MaterialTheme.colorScheme.primary,
