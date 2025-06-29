@@ -1,4 +1,4 @@
-package com.example.remainderkesehatanpasien.screen
+package com.example.remainderkesehatanpasien.presentation.reminder
 
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
@@ -25,6 +25,7 @@ import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Icon
 import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBar
+import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
@@ -34,10 +35,8 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavController
-import com.example.remainderkesehatanpasien.component.Route
+import com.example.remainderkesehatanpasien.presentation.navigation.Route
 import com.example.remainderkesehatanpasien.data.local.entity.Reminder
-import com.example.remainderkesehatanpasien.presentation.reminder.ReminderEvent
-import com.example.remainderkesehatanpasien.presentation.reminder.ReminderViewModel
 import java.text.SimpleDateFormat
 import java.util.Date
 import java.util.Locale
@@ -55,6 +54,11 @@ fun ReminderListScreen(
         topBar = {
             TopAppBar(
                 title = {Text("Jadwal Pengingat")},
+                colors = TopAppBarDefaults.topAppBarColors( // <-- Sesuaikan warna TopAppBar
+                    containerColor = MaterialTheme.colorScheme.primary,
+                    titleContentColor = MaterialTheme.colorScheme.onPrimary,
+                    navigationIconContentColor = MaterialTheme.colorScheme.onPrimary
+                ),
                 navigationIcon = {
                     IconButton(onClick = {navController.popBackStack()}){
                         Icon(Icons.Default.ArrowBack, contentDescription = "Kembali")
@@ -71,7 +75,9 @@ fun ReminderListScreen(
                         .replace("{category}", category)
                         .replace("?reminderId={reminderId}", "")
                 )
-            }) {
+            }, containerColor = MaterialTheme.colorScheme.secondary, // Warna FAB
+                contentColor = MaterialTheme.colorScheme.onSecondary
+            ) {
                 Icon(Icons.Default.Add, contentDescription = "Tambah Jadwal")
             }
         }
@@ -107,7 +113,9 @@ fun ReminderItem(
 
     Card(
         modifier = Modifier.fillMaxWidth(),
-        elevation = CardDefaults.cardElevation(defaultElevation = 2.dp)
+        elevation = CardDefaults.cardElevation(defaultElevation = 2.dp),
+        colors = CardDefaults.cardColors(containerColor = MaterialTheme.colorScheme.surfaceVariant) // Warna card
+
     ){
         Row(
             modifier = Modifier
@@ -122,10 +130,15 @@ fun ReminderItem(
                 Text(
                     text = reminder
                         .title,
-                    fontWeight = FontWeight.Bold
+                    fontWeight = FontWeight.Bold,
+                    color = MaterialTheme.colorScheme.onSurfaceVariant // Warna teks judul
+
                 )
                 reminder.description?.let{
-                    Text(text = it)
+                    Text(
+                        text = it,
+                        color = MaterialTheme.colorScheme.onSurfaceVariant.copy(alpha = 0.8f) // Warna teks deskripsi
+                    )
                 }
                 Spacer(
                     modifier = Modifier
@@ -133,12 +146,18 @@ fun ReminderItem(
                 )
                 Text(
                     text = "Waktu: $formattedTime",
-                    style = MaterialTheme.typography.bodySmall
+                    style = MaterialTheme.typography.bodySmall,
+                    color = MaterialTheme.colorScheme.onSurfaceVariant.copy(alpha = 0.7f) // Warna teks waktu
+
                 )
                 IconButton(
                     onClick = onDeleteClick
                 ){
-                    Icon(Icons.Default.Delete, contentDescription = "Hapus Jadwal")
+                    Icon(
+                        Icons.Default.Delete
+                        , contentDescription = "Hapus Jadwal",
+                        tint = MaterialTheme.colorScheme.error // Warna ikon hapus
+                    )
                 }
             }
         }

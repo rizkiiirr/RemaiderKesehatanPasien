@@ -1,4 +1,4 @@
-package com.example.remainderkesehatanpasien.screen
+package com.example.remainderkesehatanpasien.presentation.dashboard
 
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
@@ -13,7 +13,6 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyRow
 import androidx.compose.foundation.lazy.items
@@ -28,28 +27,19 @@ import androidx.compose.material.icons.filled.Search
 import androidx.compose.material.icons.filled.Settings
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
-import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.LinearProgressIndicator
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.NavigationBar
 import androidx.compose.material3.NavigationBarItem
 import androidx.compose.material3.Scaffold
-import androidx.compose.material3.Switch
 import androidx.compose.material3.Text
-import androidx.compose.material3.TextField
-import androidx.compose.material3.TextFieldDefaults
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.saveable.rememberSaveable
-import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
-import androidx.compose.ui.draw.shadow
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalUriHandler
 import androidx.compose.ui.res.painterResource
@@ -61,16 +51,13 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.constraintlayout.compose.ConstraintLayout
 import androidx.hilt.navigation.compose.hiltViewModel
-import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
 import coil.compose.AsyncImage
 import com.example.remainderkesehatanpasien.R
-import com.example.remainderkesehatanpasien.data.BottomNavigation
+import com.example.remainderkesehatanpasien.domain.model.BottomNavigation
 import com.example.remainderkesehatanpasien.data.remote.Article
-import com.example.remainderkesehatanpasien.domain.manager.SessionManager
-import com.example.remainderkesehatanpasien.presentation.dashboard.DashboardViewModel
 import com.example.remainderkesehatanpasien.presentation.news.NewsState
 import com.example.remainderkesehatanpasien.presentation.news.NewsViewModel
 import com.example.remainderkesehatanpasien.ui.theme.RemainderKesehatanPasienTheme
@@ -78,8 +65,6 @@ import com.example.remainderkesehatanpasien.ui.theme.RemainderKesehatanPasienThe
 @Composable
 fun DashboardScreen(
     navController: NavHostController,
-    darkMode: Boolean,
-    onToggleDarkMode: (Boolean) -> Unit,
     onHomeClicked: () -> Unit,
     onProfileClicked: () -> Unit,
     onSettingsClicked: () -> Unit,
@@ -123,7 +108,7 @@ fun DashboardScreen(
                     .constrainAs(border){
                         top.linkTo(parent.top)
                         start.linkTo(parent.start)
-                    }.background(Color.Red)
+                    }.background(MaterialTheme.colorScheme.primary)
                 )
                 Row(modifier = Modifier
                     .padding(top = 10.dp, start = 10.dp, end = 24.dp)
@@ -138,7 +123,7 @@ fun DashboardScreen(
                     ){
                         Text(
                             text = "REKAP",
-                            color = Color.White,
+                            color = MaterialTheme.colorScheme.onPrimary,
                             fontSize = 30.sp,
                             fontWeight = FontWeight.Bold,
                             fontStyle = FontStyle.Normal
@@ -170,7 +155,7 @@ fun DashboardScreen(
 
             Text(
                 text = "KATEGORI",
-                color = Color.Black,
+                color = MaterialTheme.colorScheme.onBackground,
                 fontSize = 25.sp,
                 fontStyle = FontStyle.Normal,
                 fontWeight = FontWeight.Bold,
@@ -195,7 +180,7 @@ fun DashboardScreen(
                         modifier = Modifier
                             .padding(top = 8.dp, bottom = 4.dp)
                             .background(
-                                color = Color.Red,
+                                color = MaterialTheme.colorScheme.secondary, // Warna secondary dari tema
                                 shape = RoundedCornerShape(10.dp)
                             )
                             .padding(16.dp)
@@ -203,7 +188,7 @@ fun DashboardScreen(
                     )
                     Text(
                         text = "Minum Obat",
-                        color = Color.Black,
+                        color = MaterialTheme.colorScheme.onBackground, // Warna teks dari tema
                         fontSize = 14.sp,
                         fontWeight = FontWeight.Bold,
                         modifier = Modifier
@@ -222,7 +207,7 @@ fun DashboardScreen(
                         Modifier
                             .padding(top = 8.dp, bottom = 4.dp)
                             .background(
-                                color = Color.Red,
+                                color = MaterialTheme.colorScheme.secondary, // Warna secondary dari tema
                                 shape = RoundedCornerShape(10.dp)
                             )
                             .padding(16.dp)
@@ -230,7 +215,7 @@ fun DashboardScreen(
                     )
                     Text(
                         text = "Jadwal Konsultasi",
-                        color = Color.Black,
+                        color = MaterialTheme.colorScheme.onBackground, // Warna teks dari tema
                         fontSize = 14.sp,
                         fontWeight = FontWeight.Bold,
                         modifier = Modifier
@@ -256,7 +241,7 @@ fun DashboardScreen(
                         Modifier
                             .padding(top = 8.dp, bottom = 4.dp)
                             .background(
-                                color = Color.Red,
+                                color = MaterialTheme.colorScheme.secondary, // Warna secondary dari tema
                                 shape = RoundedCornerShape(10.dp)
                             )
                             .padding(16.dp)
@@ -264,7 +249,7 @@ fun DashboardScreen(
                     )
                     Text(
                         text = "Cek Riwayat",
-                        color = Color.Black,
+                        color = MaterialTheme.colorScheme.onBackground, // Warna teks dari tema
                         fontSize = 14.sp,
                         fontWeight = FontWeight.Bold,
                         modifier = Modifier
@@ -282,7 +267,7 @@ fun DashboardScreen(
                         Modifier
                             .padding(top = 8.dp, bottom = 4.dp)
                             .background(
-                                color = Color.Red,
+                                color = MaterialTheme.colorScheme.secondary, // Warna secondary dari tema
                                 shape = RoundedCornerShape(10.dp)
                             )
                             .padding(16.dp)
@@ -292,7 +277,7 @@ fun DashboardScreen(
                     )
                     Text(
                         text = "Catatan Kesehatan",
-                        color = Color.Black,
+                        color = MaterialTheme.colorScheme.onBackground, // Warna teks dari tema
                         fontSize = 14.sp,
                         fontWeight = FontWeight.Bold,
                         modifier = Modifier
@@ -319,9 +304,11 @@ fun BottomNavigationBar(
         BottomNavigation("Pencarian", Icons.Default.Search, "search")
     )
     val currentRoute = navController.currentBackStackEntryAsState().value?.destination?.route
-    NavigationBar {
+    NavigationBar(
+        containerColor = MaterialTheme.colorScheme.surface // Warna container dari tema
+    ) {
         Row(
-            modifier = Modifier.background(MaterialTheme.colorScheme.inverseOnSurface)
+            modifier = Modifier.background(MaterialTheme.colorScheme.surface) // Latar belakang bar
         ) {
             bottoms.forEach { item ->
                 NavigationBarItem(
@@ -373,13 +360,13 @@ fun NewsSection(
         ) {
             Text(
                 text = "Berita Terbaru",
-                color = MaterialTheme.colorScheme.onBackground,
+                color = MaterialTheme.colorScheme.onBackground, // Warna teks
                 fontSize = 20.sp,
                 fontWeight = FontWeight.Bold
             )
             Text(
                 text = "Berita Lainnya",
-                color = Color.Red,
+                color = MaterialTheme.colorScheme.primary, // Warna primary untuk link
                 fontSize = 16.sp,
                 fontWeight = FontWeight.SemiBold,
                 modifier = Modifier.clickable { onNewsMoreClicked() } // Klik untuk ke NewsScreen
@@ -392,13 +379,13 @@ fun NewsSection(
         } else if (newsState.error != null) {
             Text(
                 text = "Gagal memuat berita: ${newsState.error}",
-                color = MaterialTheme.colorScheme.error,
+                color = MaterialTheme.colorScheme.error, // Warna error
                 modifier = Modifier.fillMaxWidth()
             )
         } else if (newsState.articles.isEmpty()) {
             Text(
                 text = "Tidak ada berita terbaru yang tersedia.",
-                color = MaterialTheme.colorScheme.onBackground.copy(alpha = 0.7f),
+                color = MaterialTheme.colorScheme.onBackground.copy(alpha = 0.7f), // Warna teks
                 modifier = Modifier.fillMaxWidth()
             )
         } else {
@@ -428,7 +415,7 @@ fun NewsCardItem(article: Article, onClick: () -> Unit) {
             .clickable { onClick() },
         shape = RoundedCornerShape(12.dp),
         elevation = CardDefaults.cardElevation(defaultElevation = 4.dp),
-        colors = CardDefaults.cardColors(containerColor = MaterialTheme.colorScheme.surfaceVariant)
+        colors = CardDefaults.cardColors(containerColor = MaterialTheme.colorScheme.surfaceVariant) // Warna permukaan dari tema
     ) {
         Column(
             modifier = Modifier
@@ -454,7 +441,7 @@ fun NewsCardItem(article: Article, onClick: () -> Unit) {
                 Text(
                     text = article.title,
                     style = MaterialTheme.typography.titleSmall.copy(fontWeight = FontWeight.Bold),
-                    color = MaterialTheme.colorScheme.onSurfaceVariant,
+                    color = MaterialTheme.colorScheme.onSurfaceVariant, // Warna teks
                     maxLines = 2,
                     overflow = TextOverflow.Ellipsis
                 )
@@ -483,13 +470,9 @@ fun NewsCardItem(article: Article, onClick: () -> Unit) {
 @Preview(showBackground = true, showSystemUi = true)
 @Composable
 fun DashboardPreview() {
-    var previewDarkMode by rememberSaveable { mutableStateOf(false) }
-
     RemainderKesehatanPasienTheme(darkTheme = false) {
         DashboardScreen(
             navController = rememberNavController(),
-            darkMode = previewDarkMode,
-            onToggleDarkMode = { previewDarkMode = !previewDarkMode },
             onHomeClicked = {},
             onProfileClicked = {},
             onSettingsClicked = {},

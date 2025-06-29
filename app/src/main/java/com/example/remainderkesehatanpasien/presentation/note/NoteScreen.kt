@@ -1,5 +1,7 @@
 import android.widget.Toast
+import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.ArrowBack
 import androidx.compose.material.icons.filled.Done
@@ -46,13 +48,22 @@ fun NoteScreen(
         topBar = {
             TopAppBar(
                 title = { Text("Buat Catatan") },
+                colors = TopAppBarDefaults.topAppBarColors( // <-- Sesuaikan warna TopAppBar
+                    containerColor = MaterialTheme.colorScheme.primary,
+                    titleContentColor = MaterialTheme.colorScheme.onPrimary,
+                    navigationIconContentColor = MaterialTheme.colorScheme.onPrimary
+                ),
                 navigationIcon = {
                     IconButton(onClick = { navController.popBackStack() }) {
                         Icon(Icons.Default.ArrowBack, contentDescription = "Kembali")
                     }
                 }) },
         floatingActionButton = {
-            FloatingActionButton(onClick = { viewModel.onEvent(NoteEvent.SaveNote) }) {
+            FloatingActionButton(
+                onClick = { viewModel.onEvent(NoteEvent.SaveNote) },
+                containerColor = MaterialTheme.colorScheme.secondary, // Warna FAB
+                contentColor = MaterialTheme.colorScheme.onSecondary
+            ) {
                 Icon(imageVector = Icons.Default.Done, contentDescription = "Simpan Perubahan")
             }
         }
@@ -62,20 +73,43 @@ fun NoteScreen(
                 .fillMaxSize()
                 .padding(innerPadding)
                 .padding(16.dp)
+                .background(MaterialTheme.colorScheme.background) // Latar belakang dari tema
         ) {
             TextField(
                 value = titleState.text,
                 onValueChange = { viewModel.onEvent(NoteEvent.EnteredTitle(it)) },
                 placeholder = { Text(text = titleState.hint) },
                 modifier = Modifier.fillMaxWidth(),
-                singleLine = true
+                singleLine = true,
+                colors = TextFieldDefaults.colors( // Sesuaikan warna TextField
+                    focusedContainerColor = MaterialTheme.colorScheme.surface,
+                    unfocusedContainerColor = MaterialTheme.colorScheme.surface,
+                    disabledContainerColor = MaterialTheme.colorScheme.surface,
+                    focusedTextColor = MaterialTheme.colorScheme.onSurface,
+                    unfocusedTextColor = MaterialTheme.colorScheme.onSurface,
+                    cursorColor = MaterialTheme.colorScheme.primary,
+                    focusedIndicatorColor = MaterialTheme.colorScheme.primary,
+                    unfocusedIndicatorColor = MaterialTheme.colorScheme.outline
+                ),
+                shape = RoundedCornerShape(8.dp)
             )
             Spacer(modifier = Modifier.height(16.dp))
             TextField(
                 value = descriptionState.text,
                 onValueChange = { viewModel.onEvent(NoteEvent.EnteredDescription(it)) },
                 placeholder = { Text(text = descriptionState.hint) },
-                modifier = Modifier.fillMaxSize()
+                modifier = Modifier.fillMaxSize(),
+                colors = TextFieldDefaults.colors( // Sesuaikan warna TextField
+                    focusedContainerColor = MaterialTheme.colorScheme.surface,
+                    unfocusedContainerColor = MaterialTheme.colorScheme.surface,
+                    disabledContainerColor = MaterialTheme.colorScheme.surface,
+                    focusedTextColor = MaterialTheme.colorScheme.onSurface,
+                    unfocusedTextColor = MaterialTheme.colorScheme.onSurface,
+                    cursorColor = MaterialTheme.colorScheme.primary,
+                    focusedIndicatorColor = MaterialTheme.colorScheme.primary,
+                    unfocusedIndicatorColor = MaterialTheme.colorScheme.outline
+                ),
+                shape = RoundedCornerShape(8.dp)
             )
         }
     }

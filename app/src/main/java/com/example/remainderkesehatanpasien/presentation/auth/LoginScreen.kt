@@ -1,8 +1,5 @@
-package com.example.remainderkesehatanpasien.screen
+package com.example.remainderkesehatanpasien.presentation.auth
 
-import com.example.remainderkesehatanpasien.R
-import androidx.compose.foundation.BorderStroke
-import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
@@ -14,25 +11,22 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.AccountCircle
 import androidx.compose.material.icons.filled.Email
 import androidx.compose.material.icons.filled.Lock
 import androidx.compose.material.icons.filled.Visibility
 import androidx.compose.material.icons.filled.VisibilityOff
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
-import androidx.compose.material3.Divider
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.OutlinedButton
 import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Text
+import androidx.compose.material3.TextFieldDefaults
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
@@ -43,7 +37,6 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
-import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontStyle
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.KeyboardType
@@ -54,26 +47,19 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
-import androidx.navigation.NavController
-import androidx.navigation.compose.rememberNavController
 import com.example.remainderkesehatanpasien.component.CustomTextField
-import com.example.remainderkesehatanpasien.presentation.auth.AuthUiEvent
-import com.example.remainderkesehatanpasien.presentation.auth.AuthViewModel
-import com.example.remainderkesehatanpasien.presentation.auth.RegisterFormEvent
 import com.example.remainderkesehatanpasien.ui.theme.RemainderKesehatanPasienTheme
-import kotlinx.coroutines.flow.collectLatest // Import collectLatest
+import kotlinx.coroutines.flow.collectLatest
 
 @Composable
-fun RegisterScreen(
-    navController: NavController,
-    onRegisterButtonClicked: () -> Unit,
+fun LoginScreen(
+    onLoginClicked: () -> Unit,
     onTextHereClicked: () -> Unit,
     viewModel: AuthViewModel = hiltViewModel()
 ) {
-    val fullNameState = viewModel.registerFullName
-    val usernameState = viewModel.registerUsername
-    val emailState = viewModel.registerEmail
-    val passwordState = viewModel.registerPassword
+
+    val emailState = viewModel.loginEmail
+    val passwordState = viewModel.loginPassword
     var passwordVisibility by remember { mutableStateOf(false) } // State untuk visibility password
 
     val context = LocalContext.current
@@ -82,11 +68,12 @@ fun RegisterScreen(
         viewModel.uiEvent.collectLatest { event ->
             when (event) {
                 is AuthUiEvent.ShowSnackbar -> {
+                    // Gunakan Snackbar atau Toast untuk pesan error
+                    // Untuk kesederhanaan, kita akan pakai Toast dulu seperti di AddNoteScreen
                     android.widget.Toast.makeText(context, event.message, android.widget.Toast.LENGTH_SHORT).show()
                 }
-                AuthUiEvent.RegistrationSuccess -> {
-                    // Setelah registrasi sukses, kembali ke halaman Login.
-                    navController.popBackStack()
+                AuthUiEvent.LoginSuccess -> {
+                    onLoginClicked() // Navigasi ke Dashboard jika login sukses
                 }
                 else -> Unit // Handle event lain jika ada
             }
@@ -95,19 +82,20 @@ fun RegisterScreen(
 
     Column(
         modifier = Modifier
-            .fillMaxSize()
             .fillMaxWidth()
-            .padding(16.dp)
+            .fillMaxSize()
             .verticalScroll(rememberScrollState())
+            .padding(16.dp)
             .background(MaterialTheme.colorScheme.background)
-    ) {
+        ) {
         Text(
-            text = "Daftar",
+            text = "Masuk",
             style = MaterialTheme.typography.headlineMedium.copy(
                 fontWeight = FontWeight.Bold
             ),
             modifier = Modifier
-                .padding(horizontal = 8.dp, vertical = 16.dp)
+                .padding(horizontal = 8.dp, vertical = 16.dp),
+            color = MaterialTheme.colorScheme.onBackground
 
         )
 
@@ -117,39 +105,8 @@ fun RegisterScreen(
             horizontalAlignment = Alignment.CenterHorizontally
         ) {
             CustomTextField(
-                value = fullNameState.text,
-                onValueChange = { viewModel.onRegisterEvent(RegisterFormEvent.EnteredFullName(it)) },
-                placeholder = "Nama Lengkap",
-                icon = Icons.Default.AccountCircle,
-                contentDesc = "Name"
-            )
-            usernameState.error?.let { error ->
-                Text(
-                    text = error,
-                    color = Color.Red,
-                    modifier = Modifier.padding(horizontal = 8.dp)
-                )
-            }
-
-            CustomTextField(
-                value = usernameState.text,
-                onValueChange = { viewModel.onRegisterEvent(RegisterFormEvent.EnteredUsername(it)) },
-                placeholder = "Nama Akun",
-                icon = Icons.Default.AccountCircle,
-                contentDesc = "Username"
-            )
-            usernameState.error?.let { error ->
-                Text(
-                    text = error,
-                    color = Color.Red,
-                    modifier = Modifier.padding(horizontal = 8.dp)
-                )
-            }
-
-
-            CustomTextField(
                 value = emailState.text,
-                onValueChange = { viewModel.onRegisterEvent(RegisterFormEvent.EnteredEmail(it)) },
+                onValueChange = { viewModel.onLoginEvent(LoginFormEvent.EnteredEmail(it)) },
                 placeholder = "Email",
                 icon = Icons.Default.Email,
                 contentDesc = "Email"
@@ -157,72 +114,84 @@ fun RegisterScreen(
             emailState.error?.let { error ->
                 Text(
                     text = error,
-                    color = Color.Red,
+                    color = MaterialTheme.colorScheme.error,
                     modifier = Modifier.padding(horizontal = 8.dp)
                 )
             }
 
             OutlinedTextField(
                 value = passwordState.text,
-                onValueChange = { viewModel.onRegisterEvent(RegisterFormEvent.EnteredPassword(it)) },
+                onValueChange = { viewModel.onLoginEvent(LoginFormEvent.EnteredPassword(it)) },
                 placeholder = {Text("Password", color = Color.LightGray)},
                 leadingIcon = {
                     Icon(
                         imageVector = Icons.Default.Lock,
                         contentDescription = "Password",
-                        tint = Color.LightGray
+                        tint = MaterialTheme.colorScheme.onSurfaceVariant.copy(alpha = 0.6f)
                     )
                 },
-                keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Password), // <--- Tipe keyboard untuk password
-                visualTransformation = if (passwordVisibility) VisualTransformation.None else PasswordVisualTransformation(), // <--- Atur visibilitas
+                keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Password),
+                visualTransformation = if (passwordVisibility) VisualTransformation.None else PasswordVisualTransformation(),
                 modifier = Modifier
                     .fillMaxWidth()
                     .padding(horizontal = 8.dp, vertical = 16.dp)
                     .border(
                         width = 2.dp,
-                        color = Color.LightGray,
+                        color = MaterialTheme.colorScheme.outline,
                         shape = RoundedCornerShape(12.dp)
                     ),
                 shape = RoundedCornerShape(12.dp),
+                colors = TextFieldDefaults.colors( // Sesuaikan warna TextField
+                    focusedContainerColor = Color.Transparent,
+                    unfocusedContainerColor = Color.Transparent,
+                    disabledContainerColor = Color.Transparent,
+                    focusedTextColor = MaterialTheme.colorScheme.onSurface,
+                    unfocusedTextColor = MaterialTheme.colorScheme.onSurface,
+                    cursorColor = MaterialTheme.colorScheme.primary, // Warna kursor
+                    focusedIndicatorColor = MaterialTheme.colorScheme.primary, // Warna indikator saat fokus
+                    unfocusedIndicatorColor = MaterialTheme.colorScheme.outline // Warna indikator saat tidak fokus
+                ),
                 trailingIcon = {
                     Icon(
                         imageVector = if (passwordVisibility) Icons.Default.Visibility else Icons.Default.VisibilityOff,
-                        contentDescription = "Visibility is wheter is true",
-                        tint = Color.LightGray,
+                        contentDescription = "Password visibility",
+                        tint = MaterialTheme.colorScheme.onSurfaceVariant.copy(alpha = 0.6f),
                         modifier = Modifier.clickable { passwordVisibility = !passwordVisibility } // Toggle visibility
                     )
                 }
             )
-            passwordState.error?.let { error ->
+            //password error akan ditampilkan di bawah textfield
+            passwordState.error?.let{error->
                 Text(
                     text = error,
-                    color = Color.Red,
+                    color = MaterialTheme.colorScheme.error,
                     modifier = Modifier.padding(horizontal = 8.dp)
                 )
             }
 
             Button(
                 onClick = {
-                    viewModel.onRegisterEvent(RegisterFormEvent.Register) // Panggil event register ke ViewModel
+                    viewModel.onLoginEvent(LoginFormEvent.Login)
                 },
                 modifier = Modifier
                     .fillMaxWidth()
                     .padding(horizontal = 8.dp, vertical = 16.dp)
                     .background(
-                        Color.Red,
+                        MaterialTheme.colorScheme.primary,
                         shape = RoundedCornerShape(12.dp)
                     ),
                 shape = RoundedCornerShape(12.dp),
                 colors = ButtonDefaults.buttonColors(
-                    containerColor = Color.Transparent
+                    containerColor = Color.Transparent // Atur transparan agar background Modifier yang terlihat
                 )
 
             ) {
                 Text(
-                    text = "Daftar",
+                    text = "Masuk",
+                    fontSize = 24.sp,
                     fontStyle = FontStyle.Normal,
                     fontWeight = FontWeight.Bold,
-                    fontSize = 24.sp,
+                    color = MaterialTheme.colorScheme.onPrimary,
                     modifier = Modifier
                         .padding(8.dp))
             }
@@ -236,15 +205,15 @@ fun RegisterScreen(
                 horizontalArrangement = Arrangement.Center
             ){
                 Text(
-                    text = "Punya akun? Masuk",
-                    fontStyle = FontStyle.Normal,
-                    color = Color.LightGray
+                    text = "Tidak punya akun? Daftar",
+                    color = MaterialTheme.colorScheme.onBackground.copy(alpha = 0.7f), // Warna teks
+                    fontStyle = FontStyle.Normal
                 )
                 Text(
                     text = " ")
                 Text(
                     text = "di sini",
-                    color = Color.Red,
+                    color = MaterialTheme.colorScheme.primary,
                     fontStyle = FontStyle.Normal,
                     fontWeight = FontWeight.SemiBold,
                     textDecoration = TextDecoration.Underline,
@@ -260,12 +229,11 @@ fun RegisterScreen(
 
 @Preview(showBackground = true, showSystemUi = true)
 @Composable
-fun RegisterPreview() {
+fun LoginPreview() {
     RemainderKesehatanPasienTheme(darkTheme = false) {
-        RegisterScreen(
-            navController = rememberNavController(), // Tambahkan ini untuk Preview
-            onTextHereClicked = {},
-            onRegisterButtonClicked = {},
+        LoginScreen(
+            onLoginClicked = {},
+            onTextHereClicked = {}
         )
     }
 }

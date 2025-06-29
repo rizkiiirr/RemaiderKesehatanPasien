@@ -1,18 +1,9 @@
-package com.example.remainderkesehatanpasien.component
+package com.example.remainderkesehatanpasien.presentation.navigation
 
-import androidx.compose.foundation.border
-import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.material3.Icon
-import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Scaffold
-import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.graphics.vector.ImageVector
-import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavHostController
 import androidx.navigation.NavType
@@ -20,8 +11,20 @@ import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.navArgument
 import androidx.navigation.navOptions // <-- IMPORT INI
-import com.example.remainderkesehatanpasien.screen.*
 import com.example.remainderkesehatanpasien.presentation.auth.AuthViewModel
+import com.example.remainderkesehatanpasien.presentation.auth.ChangePasswordScreen
+import com.example.remainderkesehatanpasien.presentation.auth.LoginScreen
+import com.example.remainderkesehatanpasien.presentation.auth.RegisterScreen
+import com.example.remainderkesehatanpasien.presentation.checkList.CheckListScreen
+import com.example.remainderkesehatanpasien.presentation.dashboard.DashboardScreen
+import com.example.remainderkesehatanpasien.presentation.news.NewsScreen
+import com.example.remainderkesehatanpasien.presentation.note.AddNoteScreen
+import com.example.remainderkesehatanpasien.presentation.note.ListNoteScreen
+import com.example.remainderkesehatanpasien.presentation.profile.ProfileScreen
+import com.example.remainderkesehatanpasien.presentation.reminder.AddEditReminderScreen
+import com.example.remainderkesehatanpasien.presentation.reminder.ReminderListScreen
+import com.example.remainderkesehatanpasien.presentation.search.SearchScreen
+import com.example.remainderkesehatanpasien.presentation.settings.SettingsScreen
 
 // Tambahkan rute baru untuk NewsScreen
 enum class Route(val path: String) {
@@ -78,8 +81,6 @@ fun NavigationApp(
                 AddEditReminderScreen(navController = navController)
                 DashboardScreen(
                     navController = navController,
-                    darkMode = darkMode,
-                    onToggleDarkMode = onToggleDarkMode,
                     onHomeClicked = {},
                     onProfileClicked = { navController.navigate(Route.Profile.path) },
                     onSettingsClicked = { navController.navigate(Route.Settings.path) },

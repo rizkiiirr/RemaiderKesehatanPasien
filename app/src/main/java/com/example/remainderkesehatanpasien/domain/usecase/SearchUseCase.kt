@@ -34,7 +34,7 @@ class SearchUseCase(
             val searchableCheckList = checklists.map{checklist ->
                 SearchableItem(
                     universalId = "checklist_${checklist.id}",
-                    originalId = checklist.id,
+                    originalId = checklist.id.hashCode(),
                     title = checklist.title,
                     description = if (checklist.isChecked) "Selesai" else "Belum Selesai",
                     timestamp = checklist.timestamp,

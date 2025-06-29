@@ -6,6 +6,7 @@ import androidx.room.Room
 import com.example.remainderkesehatanpasien.data.alarm.AlarmManagerReminderScheduler
 import com.example.remainderkesehatanpasien.data.alarm.ReminderScheduler
 import com.example.remainderkesehatanpasien.data.local.AppDatabase
+import com.example.remainderkesehatanpasien.data.local.dao.NewsDao
 import com.example.remainderkesehatanpasien.data.local.dao.ReminderDao
 import com.example.remainderkesehatanpasien.data.local.dao.UserDao
 import com.example.remainderkesehatanpasien.data.remote.api.NewsApiService
@@ -95,6 +96,12 @@ object AppModule {
             .build()
     }
 
+    @Provides
+    @Singleton
+    fun provideNewsDao(db: AppDatabase): NewsDao {
+        return db.newsDao()
+    }
+
     // Menyediakan NewsApiService
     @Provides
     @Singleton
@@ -112,8 +119,8 @@ object AppModule {
     // Menyediakan NewsRepository (implementasi)
     @Provides
     @Singleton
-    fun provideNewsRepository(remoteDataSource: NewsRemoteDataSource): NewsRepository {
-        return NewsRepositoryImpl(remoteDataSource)
+    fun provideNewsRepository(apiService: NewsApiService, newsDao: NewsDao): NewsRepository {
+        return NewsRepositoryImpl(apiService, newsDao)
     }
 
     // Menyediakan GetHealthNewsUseCase

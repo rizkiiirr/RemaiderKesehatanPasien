@@ -1,5 +1,6 @@
-package com.example.remainderkesehatanpasien.screen
+package com.example.remainderkesehatanpasien.presentation.news
 
+import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
@@ -13,7 +14,6 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavController
-import com.example.remainderkesehatanpasien.presentation.news.NewsViewModel
 import com.example.remainderkesehatanpasien.data.remote.Article
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextOverflow
@@ -37,6 +37,11 @@ fun NewsScreen(
         topBar = {
             TopAppBar(
                 title = { Text("Berita Kesehatan Terbaru") },
+                colors = TopAppBarDefaults.topAppBarColors( // <-- Sesuaikan warna TopAppBar
+                    containerColor = MaterialTheme.colorScheme.primary,
+                    titleContentColor = MaterialTheme.colorScheme.onPrimary,
+                    navigationIconContentColor = MaterialTheme.colorScheme.onPrimary
+                ),
                 navigationIcon = {
                     IconButton(onClick = { navController.popBackStack() }) {
                         Icon(Icons.Default.ArrowBack, contentDescription = "Kembali ke Dashboard")
@@ -50,11 +55,18 @@ fun NewsScreen(
                 .fillMaxSize()
                 .padding(innerPadding)
                 .padding(horizontal = 8.dp)
+                .background(MaterialTheme.colorScheme.background) // Latar belakang dari tema
         ) {
             if (state.isLoading) {
-                LinearProgressIndicator(modifier = Modifier.fillMaxWidth()) // Indikator loading
+                LinearProgressIndicator(
+                    modifier = Modifier.fillMaxWidth(),
+                    color = MaterialTheme.colorScheme.secondary // Warna indikator loading
+                ) // Indikator loading
             } else if (state.error != null) {
-                Text("Error: ${state.error}", color = MaterialTheme.colorScheme.error)
+                Text("Error: ${state.error}",
+                    color = MaterialTheme.colorScheme.error, // Warna error dari tema
+                    modifier = Modifier.fillMaxWidth()
+                )
             } else {
                 LazyColumn(
                     verticalArrangement = Arrangement.spacedBy(8.dp),
@@ -80,7 +92,7 @@ fun ArticleItem(article: Article, onClick: () -> Unit) {
             .clickable { onClick() },
         shape = RoundedCornerShape(8.dp),
         elevation = CardDefaults.cardElevation(defaultElevation = 2.dp),
-        colors = CardDefaults.cardColors(containerColor = MaterialTheme.colorScheme.surfaceVariant)
+        colors = CardDefaults.cardColors(containerColor = MaterialTheme.colorScheme.surfaceVariant) // Warna card dari tema
     ) {
         Column(modifier = Modifier.padding(16.dp)) {
             // Gambar artikel

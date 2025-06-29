@@ -1,4 +1,4 @@
-package com.example.remainderkesehatanpasien.data
+package com.example.remainderkesehatanpasien.domain.model
 
 import androidx.compose.ui.graphics.vector.ImageVector
 

@@ -1,5 +1,6 @@
-package com.example.remainderkesehatanpasien.screen
+package com.example.remainderkesehatanpasien.presentation.note
 
+import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
@@ -13,9 +14,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavController
-import com.example.remainderkesehatanpasien.component.NoteItem
-import com.example.remainderkesehatanpasien.presentation.note.NoteEvent
-import com.example.remainderkesehatanpasien.presentation.note.NoteViewModel
+import com.example.remainderkesehatanpasien.presentation.note.component.NoteItem
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -31,6 +30,11 @@ fun ListNoteScreen(
         topBar = {
             TopAppBar(
                 title = { Text("Catatan Anda") },
+                colors = TopAppBarDefaults.topAppBarColors( // <-- Sesuaikan warna TopAppBar
+                    containerColor = MaterialTheme.colorScheme.primary,
+                    titleContentColor = MaterialTheme.colorScheme.onPrimary,
+                    navigationIconContentColor = MaterialTheme.colorScheme.onPrimary
+                ),
                 navigationIcon = {
                     IconButton(onClick = { navController.popBackStack() }) {
                         Icon(Icons.Default.ArrowBack, contentDescription = "Kembali")
@@ -39,7 +43,11 @@ fun ListNoteScreen(
             )
         },
         floatingActionButton = {
-            FloatingActionButton(onClick = { onAddNoteClicked() }) {
+            FloatingActionButton(
+                onClick = { onAddNoteClicked() },
+                containerColor = MaterialTheme.colorScheme.secondary, // Warna FAB
+                contentColor = MaterialTheme.colorScheme.onSecondary
+                ) {
                 Icon(Icons.Default.Add, contentDescription = "Tambah Catatan")
             }
         }
@@ -48,7 +56,8 @@ fun ListNoteScreen(
             modifier = Modifier
                 .fillMaxSize()
                 .padding(innerPadding)
-                .padding(horizontal = 8.dp),
+                .padding(horizontal = 8.dp)
+                .background(MaterialTheme.colorScheme.background), // Latar belakang dari tema
             verticalArrangement = Arrangement.spacedBy(8.dp),
             contentPadding = PaddingValues(vertical = 8.dp)
         ) {

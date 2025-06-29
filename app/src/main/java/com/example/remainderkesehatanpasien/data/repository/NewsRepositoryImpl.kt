@@ -1,9 +1,12 @@
 package com.example.remainderkesehatanpasien.data.repository
 
+import com.example.remainderkesehatanpasien.data.local.dao.NewsDao
 import com.example.remainderkesehatanpasien.data.remote.Article
+import com.example.remainderkesehatanpasien.data.remote.api.NewsApiService
 import com.example.remainderkesehatanpasien.data.remote.source.NewsRemoteDataSource
 import com.example.remainderkesehatanpasien.domain.repository.NewsRepository
 import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.flow.flow
 import retrofit2.HttpException
 import java.io.IOException
@@ -12,7 +15,8 @@ import javax.inject.Inject
 // Implementasi nyata dari NewsRepository.
 // Kelas ini tahu BAGAIMANA cara mendapatkan data berita (dalam hal ini dari remote data source).
 class NewsRepositoryImpl @Inject constructor(
-    private val remoteDataSource: NewsRemoteDataSource
+    private val apiService: NewsApiService,
+    private val newsDao: NewsDao
 ) : NewsRepository {
 
     // API Key NewsAPI Anda.
@@ -22,27 +26,28 @@ class NewsRepositoryImpl @Inject constructor(
     private val API_KEY = "881322c0c0f64c2d812cb62c2e0d6860"
 
     override fun getHealthNews(query: String, apiKey: String): Flow<List<Article>> = flow{
-        try{
-            val response = remoteDataSource.getHealthNews(query, apiKey)
-            // Emit daftar artikel jika status respons adalah "ok"
-            if (response.status == "ok"){
-                emit(response.articles)
-            } else{
-                emit(emptyList())
+        // 1. Tampilkan data dari cache (database) terlebih dahulu
+        val cachedArticles = newsDao.getAllArticles().first() // Ambil data saat ini
+        emit(cachedArticles)
+
+        // 2. Coba ambil data baru dari network di latar belakang
+        try {
+            val response = apiService.getHealthNews(query = query, apiKey = API_KEY)
+            if (response.status == "ok") {
+                // 3. Jika berhasil, hapus cache lama dan simpan yang baru
+                newsDao.deleteAllArticles()
+                newsDao.insertArticles(response.articles)
+
+                // 4. Emit data baru dari database (yang sekarang sudah terupdate)
+                // Flow dari getAllArticles akan otomatis memancarkan data baru ini ke UI
+                // 4. Emit data baru dari database (yang sekarang sudah terupdate)
+                // Flow dari getAllArticles akan otomatis memancarkan data baru ini ke UI
             }
-        } catch (e: HttpException){
-            // Error dari server (misal: 4xx, 5xx)
-            // Anda bisa mengirimkan pesan error yang lebih spesifik
-            emit(emptyList())// Emit kosong saat terjadi error HTTP
-            e.printStackTrace() // Cetak stack trace untuk debugging
-        } catch (e: IOException) {
-            // Error koneksi jaringan (misal: tidak ada internet)
-            emit(emptyList()) // Emit kosong saat tidak ada koneksi
-            e.printStackTrace() // Cetak stack trace untuk debugging
         } catch (e: Exception) {
-            // Error lain yang tidak terduga
-            emit(emptyList()) // Emit kosong untuk error lain
-            e.printStackTrace() // Cetak stack trace untuk debugging
+            // Jika network gagal, tidak perlu melakukan apa-apa.
+            // Pengguna akan tetap melihat data dari cache.
+            // Kita bisa log error ini jika perlu.
+            e.printStackTrace()
         }
     }
 }

@@ -12,7 +12,7 @@ import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.navigation.compose.rememberNavController
-import com.example.remainderkesehatanpasien.component.NavigationApp
+import com.example.remainderkesehatanpasien.presentation.navigation.NavigationApp
 import com.example.remainderkesehatanpasien.ui.theme.RemainderKesehatanPasienTheme
 import dagger.hilt.android.AndroidEntryPoint // <-- TAMBAHKAN IMPORT INI
 

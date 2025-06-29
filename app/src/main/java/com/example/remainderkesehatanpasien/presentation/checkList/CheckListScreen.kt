@@ -1,10 +1,11 @@
-package com.example.remainderkesehatanpasien.screen
+package com.example.remainderkesehatanpasien.presentation.checkList
 
 import android.widget.Toast
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
+import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Add
 import androidx.compose.material.icons.filled.ArrowBack
@@ -25,10 +26,6 @@ import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavController
 import com.example.remainderkesehatanpasien.data.local.entity.CheckListItem
-import com.example.remainderkesehatanpasien.presentation.checkList.CheckListEvent
-import com.example.remainderkesehatanpasien.presentation.checkList.CheckListState
-import com.example.remainderkesehatanpasien.presentation.checkList.CheckListViewModel
-import com.example.remainderkesehatanpasien.presentation.checkList.UIEvent
 import kotlinx.coroutines.flow.collectLatest
 
 
@@ -63,6 +60,11 @@ fun CheckListScreen(
         topBar = {
             TopAppBar(
                 title = { Text("Riwayat Pengecekan") },
+                colors = TopAppBarDefaults.topAppBarColors( // <-- Sesuaikan warna TopAppBar
+                    containerColor = MaterialTheme.colorScheme.primary,
+                    titleContentColor = MaterialTheme.colorScheme.onPrimary,
+                    navigationIconContentColor = MaterialTheme.colorScheme.onPrimary
+                ),
                 navigationIcon = {
                     IconButton(onClick = { navController.popBackStack() }) {
                         Icon(Icons.Default.ArrowBack, contentDescription = "Kembali")
@@ -93,7 +95,7 @@ fun CheckListScreen(
                             showEditDialog = true
                         }
                     )
-                    Divider()
+                    Divider(color = MaterialTheme.colorScheme.outline) // Warna divider
                 }
             }
 
@@ -108,11 +110,24 @@ fun CheckListScreen(
                     value = newItemTitle,
                     onValueChange = { viewModel.onEvent(CheckListEvent.OnNewItemTitleChange(it)) },
                     label = { Text("Tambah riwayat baru...") },
-                    modifier = Modifier.weight(1f)
+                    modifier = Modifier.weight(1f),
+                    colors = TextFieldDefaults.outlinedTextFieldColors( // Warna OutlinedTextField
+                        focusedBorderColor = MaterialTheme.colorScheme.primary,
+                        unfocusedBorderColor = MaterialTheme.colorScheme.outline,
+                        cursorColor = MaterialTheme.colorScheme.primary,
+                        containerColor = MaterialTheme.colorScheme.surface, // Background TextField
+                        focusedLabelColor = MaterialTheme.colorScheme.primary,
+                        unfocusedLabelColor = MaterialTheme.colorScheme.onSurfaceVariant.copy(alpha = 0.6f)
+                    ),
+                    shape = RoundedCornerShape(8.dp)
                 )
                 Spacer(modifier = Modifier.width(8.dp))
                 IconButton(onClick = { viewModel.onEvent(CheckListEvent.OnAddItem) }) {
-                    Icon(Icons.Default.Add, contentDescription = "Tambah Item")
+                    Icon(
+                        Icons.Default.Add,
+                        contentDescription = "Tambah Item",
+                        tint = MaterialTheme.colorScheme.primary // Warna ikon tambah
+                    )
                 }
             }
         }
@@ -125,10 +140,10 @@ fun CheckListScreen(
                 showDialog = false
             },
             title = {
-                Text(text = "Konfirmasi Hapus")
+                Text(text = "Konfirmasi Hapus", color = MaterialTheme.colorScheme.onSurface) // Warna teks
             },
             text = {
-                Text(text = "Apakah Anda yakin ingin menghapus item '${itemToDelete?.title}'?")
+                Text(text = "Apakah Anda yakin ingin menghapus item '${itemToDelete?.title}'?", color = MaterialTheme.colorScheme.onSurfaceVariant) // Warna teks
             },
             confirmButton = {
                 TextButton(
@@ -138,7 +153,8 @@ fun CheckListScreen(
                             viewModel.onEvent(CheckListEvent.OnDeleteItem(item))
                         }
                         showDialog = false
-                    }
+                    },
+                    colors = ButtonDefaults.textButtonColors(contentColor = MaterialTheme.colorScheme.error) // Warna tombol hapus
                 ) {
                     Text("Hapus")
                 }
@@ -148,11 +164,13 @@ fun CheckListScreen(
                     onClick = {
                         // Aksi saat tombol "Batal" ditekan
                         showDialog = false
-                    }
+                    },
+                    colors = ButtonDefaults.textButtonColors(contentColor = MaterialTheme.colorScheme.onSurfaceVariant) // Warna tombol batal
                 ) {
                     Text("Batal")
                 }
-            }
+            },
+            containerColor = MaterialTheme.colorScheme.surface // Warna background dialog
         )
     }
 
@@ -165,7 +183,16 @@ fun CheckListScreen(
                 OutlinedTextField(
                     value = editText,
                     onValueChange = { editText = it },
-                    label = { Text("Judul Baru") }
+                    label = { Text("Judul Baru") },
+                    colors = TextFieldDefaults.outlinedTextFieldColors( // Warna OutlinedTextField
+                        focusedBorderColor = MaterialTheme.colorScheme.primary,
+                        unfocusedBorderColor = MaterialTheme.colorScheme.outline,
+                        cursorColor = MaterialTheme.colorScheme.primary,
+                        containerColor = MaterialTheme.colorScheme.surface,
+                        focusedLabelColor = MaterialTheme.colorScheme.primary,
+                        unfocusedLabelColor = MaterialTheme.colorScheme.onSurfaceVariant.copy(alpha = 0.6f)
+                    ),
+                    shape = RoundedCornerShape(8.dp) // Sudut membulat
                 )
             },
             confirmButton = {
@@ -175,16 +202,20 @@ fun CheckListScreen(
                             viewModel.onEvent(CheckListEvent.OnSaveEdit(it, editText))
                         }
                         showEditDialog = false
-                    }
+                    },
+                    colors = ButtonDefaults.textButtonColors(contentColor = MaterialTheme.colorScheme.primary) // Warna tombol simpan
                 ) {
                     Text("Simpan")
                 }
             },
             dismissButton = {
-                TextButton(onClick = { showEditDialog = false }) {
+                TextButton(onClick = { showEditDialog = false },
+                    colors = ButtonDefaults.textButtonColors(contentColor = MaterialTheme.colorScheme.onSurfaceVariant) // Warna tombol batal
+                ) {
                     Text("Batal")
                 }
-            }
+            },
+            containerColor = MaterialTheme.colorScheme.surface // Warna background dialog
         )
     }
 }

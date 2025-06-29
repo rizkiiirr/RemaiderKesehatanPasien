@@ -110,6 +110,8 @@ dependencies {
 
 // Dependency untuk Crashlytics
     implementation("com.google.firebase:firebase-crashlytics")
+    implementation("com.google.firebase:firebase-database-ktx")
+
 }
 
 // Tambahkan blok ini di bagian paling bawah file untuk Hilt

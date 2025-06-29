@@ -1,4 +1,4 @@
-package com.example.remainderkesehatanpasien.screen
+package com.example.remainderkesehatanpasien.presentation.settings
 
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
@@ -15,7 +15,6 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.rememberScrollState
-import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
@@ -23,10 +22,7 @@ import androidx.compose.material.icons.filled.AccountCircle
 import androidx.compose.material.icons.filled.ArrowBackIosNew
 import androidx.compose.material.icons.filled.ExitToApp
 import androidx.compose.material.icons.filled.Lock
-import androidx.compose.material.icons.filled.Notifications
 import androidx.compose.material.icons.filled.Palette
-import androidx.compose.material.icons.filled.PlayArrow
-import androidx.compose.material.icons.filled.Search
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.Card
@@ -35,8 +31,6 @@ import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Switch
 import androidx.compose.material3.Text
-import androidx.compose.material3.TextField
-import androidx.compose.material3.TextFieldDefaults
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
@@ -44,9 +38,6 @@ import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.draw.clip
-import androidx.compose.ui.draw.shadow
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontStyle
@@ -55,7 +46,6 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.constraintlayout.compose.ConstraintLayout
-import androidx.hilt.navigation.compose.hiltViewModel
 import com.example.remainderkesehatanpasien.R
 import com.example.remainderkesehatanpasien.ui.theme.RemainderKesehatanPasienTheme
 
@@ -87,7 +77,7 @@ fun SettingsScreen(
                 .constrainAs(border){
                     top.linkTo(parent.top)
                     start.linkTo(parent.start)
-                }.background(Color.Red),
+                }.background(MaterialTheme.colorScheme.primary), // Warna utama dari tema
 
                 )
             Row(modifier = Modifier
@@ -122,7 +112,7 @@ fun SettingsScreen(
                 ){
                     Text(
                         text = "Pengaturan",
-                        color = Color.White,
+                        color = MaterialTheme.colorScheme.onPrimary, // Warna teks di atas primary
                         fontSize = 25.sp,
                         fontStyle = FontStyle.Normal,
                         fontWeight = FontWeight.Bold
@@ -186,9 +176,9 @@ fun SettingsScreen(
         Button(
             onClick = { throw RuntimeException("Test Crash dari Tombol Pengaturan") },
             modifier = Modifier.padding(16.dp),
-            colors = ButtonDefaults.buttonColors(containerColor = MaterialTheme.colorScheme.error)
+            colors = ButtonDefaults.buttonColors(containerColor = MaterialTheme.colorScheme.error) // Warna error dari tema
         ) {
-            Text("Tes Crash Aplikasi")
+            Text("Tes Crash Aplikasi", color = MaterialTheme.colorScheme.onError)
         }
     }
 }
@@ -197,7 +187,7 @@ fun SettingsScreen(
 fun SettingCategoryHeader(title: String) {
     Text(
         text = title,
-        color = Color.Black,
+        color = MaterialTheme.colorScheme.onBackground, // Warna teks dari tema
         fontSize = 20.sp,
         fontStyle = FontStyle.Normal,
         fontWeight = FontWeight.Bold,
@@ -218,7 +208,7 @@ fun SettingsItem(
         modifier = Modifier
             .padding(bottom = 8.dp, start = 14.dp, end = 14.dp) // Sesuaikan padding
             .fillMaxWidth(),
-        colors = CardDefaults.cardColors(containerColor = MaterialTheme.colorScheme.surfaceVariant), // Sesuaikan warna
+        colors = CardDefaults.cardColors(containerColor = MaterialTheme.colorScheme.surfaceVariant), // Warna surface variant dari tema
         elevation = CardDefaults.cardElevation(defaultElevation = 2.dp), // Beri sedikit elevasi
         shape = RoundedCornerShape(8.dp) // Sudut membulat
     ) {
@@ -242,7 +232,7 @@ fun SettingsItem(
                 Text(
                     text = mainText,
                     style = MaterialTheme.typography.bodyLarge, // Gaya teks
-                    color = MaterialTheme.colorScheme.onSurfaceVariant,
+                    color = MaterialTheme.colorScheme.onSurfaceVariant, // Warna teks di atas surface variant
                     fontWeight = FontWeight.Normal
                 )
             }

@@ -1,4 +1,4 @@
-package com.example.remainderkesehatanpasien.component
+package com.example.remainderkesehatanpasien.presentation.note.component
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
@@ -13,6 +13,7 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.shadow
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextOverflow
@@ -29,6 +30,7 @@ fun NoteItem(
     Box(
         modifier = modifier
             .fillMaxWidth()
+            .shadow(2.dp, RoundedCornerShape(8.dp)) // <-- TAMBAHKAN SHADOW DI SINI
             .background(MaterialTheme.colorScheme.surfaceVariant, RoundedCornerShape(8.dp))
             .clickable { onItemClick() }
             .padding(16.dp)
