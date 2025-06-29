@@ -26,9 +26,6 @@ class AlarmManagerReminderScheduler @Inject constructor(
             PendingIntent.FLAG_UPDATE_CURRENT or PendingIntent.FLAG_IMMUTABLE
         )
 
-        // --- PERBAIKAN DI SINI ---
-        // Cek apakah aplikasi memiliki izin untuk menyetel alarm tepat waktu
-        // Pengecekan ini hanya relevan untuk Android 12 (SDK 31) ke atas
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S) {
             if (alarmManager.canScheduleExactAlarms()) {
                 alarmManager.setExactAndAllowWhileIdle(
@@ -38,7 +35,6 @@ class AlarmManagerReminderScheduler @Inject constructor(
                 )
             }
         } else {
-            // Untuk versi Android di bawah 12, kita bisa langsung setel alarm
             alarmManager.setExactAndAllowWhileIdle(
                 AlarmManager.RTC_WAKEUP,
                 reminder.reminderTime,

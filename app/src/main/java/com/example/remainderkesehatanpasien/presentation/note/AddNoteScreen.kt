@@ -45,12 +45,12 @@ fun AddNoteScreen(
         topBar = {
             TopAppBar(
                 title = { Text("Tambah Catatan") },
-                colors = TopAppBarDefaults.topAppBarColors( // <-- Sesuaikan warna TopAppBar
+                colors = TopAppBarDefaults.topAppBarColors( 
                     containerColor = MaterialTheme.colorScheme.primary,
                     titleContentColor = MaterialTheme.colorScheme.onPrimary,
                     navigationIconContentColor = MaterialTheme.colorScheme.onPrimary
                 ),
-                navigationIcon = { // <-- Tambahkan navigationIcon
+                navigationIcon = { 
                     IconButton(onClick = { navController.popBackStack() }) {
                         Icon(Icons.Default.ArrowBack, contentDescription = "Kembali")
                     }
@@ -59,7 +59,7 @@ fun AddNoteScreen(
         floatingActionButton = {
             FloatingActionButton(
                 onClick = { viewModel.onEvent(NoteEvent.SaveNote) },
-                containerColor = MaterialTheme.colorScheme.secondary, // Warna FAB
+                containerColor = MaterialTheme.colorScheme.secondary, 
                 contentColor = MaterialTheme.colorScheme.onSecondary
                 ) {
                 Icon(imageVector = Icons.Default.Done, contentDescription = "Simpan")
@@ -71,7 +71,7 @@ fun AddNoteScreen(
                 .fillMaxSize()
                 .padding(innerPadding)
                 .padding(16.dp)
-                .background(MaterialTheme.colorScheme.background) // Latar belakang dari tema
+                .background(MaterialTheme.colorScheme.background) 
         ) {
             TextField(
                 value = titleState.text,
@@ -79,7 +79,7 @@ fun AddNoteScreen(
                 placeholder = { Text(text = titleState.hint) },
                 modifier = Modifier.fillMaxWidth(),
                 singleLine = true,
-                colors = TextFieldDefaults.colors( // Sesuaikan warna TextField
+                colors = TextFieldDefaults.colors( 
                     focusedContainerColor = MaterialTheme.colorScheme.surface,
                     unfocusedContainerColor = MaterialTheme.colorScheme.surface,
                     disabledContainerColor = MaterialTheme.colorScheme.surface,
@@ -97,7 +97,7 @@ fun AddNoteScreen(
                 onValueChange = { viewModel.onEvent(NoteEvent.EnteredDescription(it)) },
                 placeholder = { Text(text = descriptionState.hint) },
                 modifier = Modifier.fillMaxSize(),
-                colors = TextFieldDefaults.colors( // Sesuaikan warna TextField
+                colors = TextFieldDefaults.colors( 
                     focusedContainerColor = MaterialTheme.colorScheme.surface,
                     unfocusedContainerColor = MaterialTheme.colorScheme.surface,
                     disabledContainerColor = MaterialTheme.colorScheme.surface,

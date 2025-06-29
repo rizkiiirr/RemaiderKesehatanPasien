@@ -7,9 +7,8 @@ import javax.inject.Inject
 
 @HiltViewModel
 class DashboardViewModel @Inject constructor(
-    val sessionManager: SessionManager // Menginjeksi SessionManager di ViewModel
+    val sessionManager: SessionManager 
 ) : ViewModel() {
-    // ViewModel ini bisa digunakan untuk logika khusus Dashboard lainnya
-    // Seperti pengelolaan state UI, dll.
-    val currentUser = sessionManager.currentUser // Mengekspos currentUser dari SessionManager
+
+    val currentUser = sessionManager.currentUser 
 }

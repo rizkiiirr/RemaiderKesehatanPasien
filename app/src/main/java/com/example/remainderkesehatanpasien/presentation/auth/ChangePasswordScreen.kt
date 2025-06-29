@@ -47,7 +47,7 @@ fun ChangePasswordScreen(
 
     var currentPasswordVisibility by remember { mutableStateOf(false) }
     var newPasswordVisibility by remember { mutableStateOf(false) }
-    var confirmNewPasswordVisibility by remember { mutableStateOf(false) } // Ini sudah benar dideklarasikan di sini
+    var confirmNewPasswordVisibility by remember { mutableStateOf(false) }
 
     val context = LocalContext.current
 
@@ -69,7 +69,7 @@ fun ChangePasswordScreen(
         topBar = {
             TopAppBar(
                 title = { Text("Login dan Keamanan") },
-                colors = TopAppBarDefaults.topAppBarColors( // <-- Sesuaikan warna TopAppBar
+                colors = TopAppBarDefaults.topAppBarColors(
                     containerColor = MaterialTheme.colorScheme.primary,
                     titleContentColor = MaterialTheme.colorScheme.onPrimary,
                     navigationIconContentColor = MaterialTheme.colorScheme.onPrimary
@@ -99,7 +99,6 @@ fun ChangePasswordScreen(
                 color = MaterialTheme.colorScheme.onBackground
             )
 
-            // Password Saat Ini
             OutlinedTextField(
                 value = currentPasswordState.text,
                 onValueChange = { viewModel.onEvent(ChangePasswordFormEvent.EnteredCurrentPassword(it)) },
@@ -109,7 +108,7 @@ fun ChangePasswordScreen(
                 visualTransformation = if (currentPasswordVisibility) VisualTransformation.None else PasswordVisualTransformation(),
                 modifier = Modifier.fillMaxWidth(),
                 isError = currentPasswordState.error != null,
-                colors = TextFieldDefaults.colors( // Sesuaikan warna TextField
+                colors = TextFieldDefaults.colors(
                     focusedContainerColor = MaterialTheme.colorScheme.surface,
                     unfocusedContainerColor = MaterialTheme.colorScheme.surface,
                     disabledContainerColor = MaterialTheme.colorScheme.surface,
@@ -125,7 +124,7 @@ fun ChangePasswordScreen(
                         Icon(
                             imageVector = if (currentPasswordVisibility) Icons.Default.Visibility else Icons.Default.VisibilityOff,
                             contentDescription = "Toggle password visibility",
-                            tint = MaterialTheme.colorScheme.onSurfaceVariant.copy(alpha = 0.6f) // Warna ikon
+                            tint = MaterialTheme.colorScheme.onSurfaceVariant.copy(alpha = 0.6f)
 
                         )
                     }
@@ -135,7 +134,6 @@ fun ChangePasswordScreen(
                 Text(text = error, color = MaterialTheme.colorScheme.error, fontSize = 12.sp, modifier = Modifier.fillMaxWidth().padding(start = 16.dp))
             }
 
-            // Password Baru
             OutlinedTextField(
                 value = newPasswordState.text,
                 onValueChange = { viewModel.onEvent(ChangePasswordFormEvent.EnteredNewPassword(it)) },
@@ -145,7 +143,7 @@ fun ChangePasswordScreen(
                 visualTransformation = if (newPasswordVisibility) VisualTransformation.None else PasswordVisualTransformation(),
                 modifier = Modifier.fillMaxWidth(),
                 isError = newPasswordState.error != null,
-                colors = TextFieldDefaults.colors( // Sesuaikan warna TextField
+                colors = TextFieldDefaults.colors(
                     focusedContainerColor = MaterialTheme.colorScheme.surface,
                     unfocusedContainerColor = MaterialTheme.colorScheme.surface,
                     disabledContainerColor = MaterialTheme.colorScheme.surface,
@@ -160,7 +158,7 @@ fun ChangePasswordScreen(
                         Icon(
                             imageVector = if (newPasswordVisibility) Icons.Default.Visibility else Icons.Default.VisibilityOff,
                             contentDescription = "Toggle password visibility",
-                            tint = MaterialTheme.colorScheme.onSurfaceVariant.copy(alpha = 0.6f) // Warna ikon
+                            tint = MaterialTheme.colorScheme.onSurfaceVariant.copy(alpha = 0.6f)
                         )
                     }
                 }
@@ -169,17 +167,16 @@ fun ChangePasswordScreen(
                 Text(text = error, color = MaterialTheme.colorScheme.error, fontSize = 12.sp, modifier = Modifier.fillMaxWidth().padding(start = 16.dp))
             }
 
-            // Konfirmasi Password Baru
             OutlinedTextField(
                 value = confirmNewPasswordState.text,
                 onValueChange = { viewModel.onEvent(ChangePasswordFormEvent.EnteredConfirmNewPassword(it)) },
                 label = { Text("Konfirmasi Password Baru") },
                 leadingIcon = { Icon(Icons.Default.Lock, contentDescription = null) },
                 keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Password),
-                visualTransformation = if (confirmNewPasswordVisibility) VisualTransformation.None else PasswordVisualTransformation(), // <-- Ini baris 187 yang saya perbaiki
+                visualTransformation = if (confirmNewPasswordVisibility) VisualTransformation.None else PasswordVisualTransformation(),
                 modifier = Modifier.fillMaxWidth(),
                 isError = confirmNewPasswordState.error != null,
-                colors = TextFieldDefaults.colors( // Sesuaikan warna TextField
+                colors = TextFieldDefaults.colors(
                     focusedContainerColor = MaterialTheme.colorScheme.surface,
                     unfocusedContainerColor = MaterialTheme.colorScheme.surface,
                     disabledContainerColor = MaterialTheme.colorScheme.surface,
@@ -194,7 +191,7 @@ fun ChangePasswordScreen(
                         Icon(
                             imageVector = if (confirmNewPasswordVisibility) Icons.Default.Visibility else Icons.Default.VisibilityOff,
                             contentDescription = "Toggle password visibility",
-                            tint = MaterialTheme.colorScheme.onSurfaceVariant.copy(alpha = 0.6f) // Warna ikon
+                            tint = MaterialTheme.colorScheme.onSurfaceVariant.copy(alpha = 0.6f)
                         )
                     }
                 }
@@ -211,7 +208,7 @@ fun ChangePasswordScreen(
                     .fillMaxWidth()
                     .height(50.dp),
                 shape = RoundedCornerShape(12.dp),
-                colors = ButtonDefaults.buttonColors(containerColor = MaterialTheme.colorScheme.primary) // Warna tombol
+                colors = ButtonDefaults.buttonColors(containerColor = MaterialTheme.colorScheme.primary)
 
             ) {
                 Text("Selesai", fontSize = 18.sp, fontWeight = FontWeight.Bold)

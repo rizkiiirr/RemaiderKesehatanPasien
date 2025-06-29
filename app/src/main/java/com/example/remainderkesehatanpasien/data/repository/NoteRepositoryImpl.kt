@@ -5,13 +5,12 @@ import com.example.remainderkesehatanpasien.data.local.dao.NoteDao
 import com.example.remainderkesehatanpasien.domain.repository.NoteRepository
 import kotlinx.coroutines.flow.Flow
 
-// Ini adalah implementasi nyata. Dia tahu BAGAIMANA cara mendapatkan data (misal dari DAO).
 class NoteRepositoryImpl(
     private val dao: NoteDao
-) : NoteRepository { // Mengimplementasikan interface dari Domain
+) : NoteRepository {
 
     override fun getNotes(): Flow<List<Note>> {
-        return dao.getAllNotes() // Mengambil data dari database lokal
+        return dao.getAllNotes()
     }
 
     override suspend fun getNoteById(id: Int): Note? {

@@ -15,13 +15,13 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalView
 import androidx.core.view.WindowCompat
 
-// Definisikan Light Color Scheme menggunakan warna kustom Anda
+
 private val LightColorScheme = lightColorScheme(
     primary = PrimaryLight,
     onPrimary = OnPrimaryLight,
     secondary = SecondaryLight,
     onSecondary = OnSecondaryLight,
-    tertiary = SecondaryLight, // Menggunakan secondary sebagai tertiary jika tidak ada tertiary khusus
+    tertiary = SecondaryLight, 
     onTertiary = OnSecondaryLight,
     background = BackgroundLight,
     onBackground = OnBackgroundLight,
@@ -29,12 +29,12 @@ private val LightColorScheme = lightColorScheme(
     onSurface = OnSurfaceLight,
     error = ErrorLight,
     onError = OnErrorLight,
-    // Jika Anda memiliki warna tambahan seperti surfaceVariant, outline, dll.
-    surfaceVariant = BackgroundLight, // Memberikan sedikit variasi pada permukaan
-    outline = OnSurfaceLight.copy(alpha = 0.3f) // Warna untuk border atau outline
+    
+    surfaceVariant = BackgroundLight, 
+    outline = OnSurfaceLight.copy(alpha = 0.3f) 
 )
 
-// Definisikan Dark Color Scheme menggunakan warna kustom Anda
+
 private val DarkColorScheme = darkColorScheme(
     primary = PrimaryDark,
     onPrimary = OnPrimaryDark,
@@ -54,9 +54,9 @@ private val DarkColorScheme = darkColorScheme(
 
 @Composable
 fun RemainderKesehatanPasienTheme(
-    darkTheme: Boolean = isSystemInDarkTheme(), // Gunakan darkTheme yang diteruskan dari MainActivity
-    // Dynamic color is available only on Android 12+
-    dynamicColor: Boolean = false, // Atur ke false karena kita menggunakan palet kustom
+    darkTheme: Boolean = isSystemInDarkTheme(), 
+    
+    dynamicColor: Boolean = false, 
     content: @Composable () -> Unit
 ) {
     val colorScheme = when {
@@ -71,15 +71,15 @@ fun RemainderKesehatanPasienTheme(
     if (!view.isInEditMode) {
         SideEffect {
             val window = (view.context as Activity).window
-            window.statusBarColor = colorScheme.primary.toArgb() // Mengubah warna status bar
-            // Mengubah ikon status bar agar sesuai dengan tema terang/gelap
+            window.statusBarColor = colorScheme.primary.toArgb() 
+            
             WindowCompat.getInsetsController(window, view).isAppearanceLightStatusBars = darkTheme
         }
     }
 
     MaterialTheme(
         colorScheme = colorScheme,
-        typography = Typography, // Pastikan Typography Anda sudah didefinisikan atau gunakan default
+        typography = Typography, 
         content = content
     )
 }

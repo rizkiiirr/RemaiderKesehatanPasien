@@ -73,7 +73,7 @@ fun SearchScreen(
                 .fillMaxSize()
                 .padding(innerPadding)
         ) {
-            // Kotak Pencarian
+            
             OutlinedTextField(
                 value = query,
                 onValueChange = { viewModel.onEvent(SearchEvent.OnQueryChange(it)) },
@@ -84,9 +84,9 @@ fun SearchScreen(
                 leadingIcon = { Icon(Icons.Default.Search, contentDescription = "Cari") }
             )
 
-            // Daftar Hasil Pencarian
+            
             if (searchResults.isEmpty() && query.isNotEmpty()) {
-                // Tampilkan pesan jika hasil kosong dan pengguna sedang mencari
+                
                 Box(
                     modifier = Modifier.fillMaxSize(),
                     contentAlignment = Alignment.Center
@@ -94,7 +94,7 @@ fun SearchScreen(
                     Text("Tidak ada hasil ditemukan untuk '$query'")
                 }
             } else {
-                // Tampilkan LazyColumn jika ada hasil, atau jika query masih kosong
+                
                 LazyColumn(
                     modifier = Modifier.fillMaxSize(),
                     contentPadding = PaddingValues(horizontal = 16.dp, vertical = 8.dp),
@@ -114,9 +114,9 @@ fun SearchScreen(
                                         onNavController.navigate(Route.CheckList.path)
                                     }
                                     ItemType.REMINDER -> {
-                                        // Arahkan ke list yang sesuai berdasarkan kategori di dalam reminder
-                                        // Kita perlu mengambil kategori dari item reminder asli
-                                        // Untuk saat ini, kita bisa asumsikan dari judul atau default.
+                                        
+                                        
+                                        
                                         val category = if (item.title.contains("Obat", ignoreCase = true)) "OBAT" else "KONSULTASI"
                                         onNavController.navigate("reminderList/$category")
                                     }
@@ -130,7 +130,7 @@ fun SearchScreen(
     }
 }
 
-// Composable baru untuk menampilkan satu item hasil pencarian
+
 @Composable
 fun SearchItem(
     item: SearchableItem,

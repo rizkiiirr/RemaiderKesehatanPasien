@@ -5,10 +5,10 @@ import retrofit2.http.GET
 import retrofit2.http.Query
 
 interface NewsApiService {
-    @GET("everything") // Atau "top-headlines" jika Anda hanya ingin berita utama
+    @GET("everything")
     suspend fun getHealthNews(
-        @Query("q") query: String = "kesehatan", // Kata kunci pencarian (misal: "kesehatan", "gizi", "medis")
-        @Query("language") language: String = "id", // Bahasa artikel (misal: "id" untuk Indonesia)
-        @Query("apiKey") apiKey: String // API Key Anda
+        @Query("q") query: String = "kesehatan", // kata kunci berita
+        @Query("language") language: String = "id", // bahasa artikel
+        @Query("apiKey") apiKey: String
     ): NewsResponse
 }

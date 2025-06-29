@@ -53,7 +53,7 @@ fun ProfileScreen(
                     Toast.makeText(context, event.message, Toast.LENGTH_LONG).show()
                 }
                 ProfileUiEvent.SaveProfileSuccess -> {
-                    onHomeClicked() // Kembali ke Dashboard setelah simpan
+                    onHomeClicked() 
                 }
             }
         }
@@ -85,7 +85,7 @@ fun ProfileScreen(
         }
 
         ProfileImagePicker(
-            imageUrl = viewModel.profileImageUrl, // Menggunakan URL gambar dari ViewModel
+            imageUrl = viewModel.profileImageUrl, 
             onImageSelected = { uri -> viewModel.onEvent(ProfileFormEvent.UpdateProfileImage(uri.toString())) }
         )
 
@@ -166,11 +166,11 @@ fun ProfileScreen(
     }
 }
 
-// Komponen terpisah untuk Image Picker
+
 @Composable
 fun ProfileImagePicker(
-    imageUrl: String?, // Sekarang menerima String URL gambar
-    onImageSelected: (Uri) -> Unit // Menerima Uri dari ActivityResultLauncher
+    imageUrl: String?, 
+    onImageSelected: (Uri) -> Unit 
 ){
     val launcher = rememberLauncherForActivityResult(
         contract = ActivityResultContracts.GetContent()
@@ -189,12 +189,12 @@ fun ProfileImagePicker(
                 .padding(8.dp)
                 .size(100.dp)
         ){
-            AsyncImage( // Menggunakan AsyncImage dari Coil
-                model = imageUrl ?: R.drawable.user, // Tampilkan gambar dari URL internal atau placeholder
+            AsyncImage( 
+                model = imageUrl ?: R.drawable.user, 
                 contentDescription = "Profile Picture",
                 modifier = Modifier
-                    .fillMaxSize() // Isi Card
-                    .clickable { launcher.launch("image/*")}, // Klik untuk memilih gambar
+                    .fillMaxSize() 
+                    .clickable { launcher.launch("image/*")}, 
                 contentScale = ContentScale.Crop
             )
         }

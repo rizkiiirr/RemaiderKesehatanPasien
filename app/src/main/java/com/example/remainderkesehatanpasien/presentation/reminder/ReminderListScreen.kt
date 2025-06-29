@@ -56,7 +56,7 @@ fun ReminderListScreen(
     val state by viewModel.state.collectAsState()
     val category = viewModel.category
 
-    // --- LANGKAH 1: Tambahkan State untuk Mengontrol Dialog ---
+    
     var showDeleteDialog by remember { mutableStateOf(false) }
     var reminderToDelete by remember { mutableStateOf<Reminder?>(null) }
 
@@ -64,7 +64,7 @@ fun ReminderListScreen(
         topBar = {
             TopAppBar(
                 title = { Text(if (category == "OBAT") "Jadwal Minum Obat" else "Jadwal Konsultasi") },
-                colors = TopAppBarDefaults.topAppBarColors( // <-- Sesuaikan warna TopAppBar
+                colors = TopAppBarDefaults.topAppBarColors( 
                     containerColor = MaterialTheme.colorScheme.primary,
                     titleContentColor = MaterialTheme.colorScheme.onPrimary,
                     navigationIconContentColor = MaterialTheme.colorScheme.onPrimary
@@ -79,13 +79,13 @@ fun ReminderListScreen(
 
         floatingActionButton = {
             FloatingActionButton(onClick = {
-                // Langsung navigasi dari sini dengan membawa kategori
+                
                 navController.navigate(
                     Route.AddEditReminder.path
                         .replace("{category}", category)
                         .replace("?reminderId={reminderId}", "")
                 )
-            }, containerColor = MaterialTheme.colorScheme.secondary, // Warna FAB
+            }, containerColor = MaterialTheme.colorScheme.secondary, 
                contentColor = MaterialTheme.colorScheme.onSecondary
             ) {
                 Icon(Icons.Default.Add, contentDescription = "Tambah Jadwal")
@@ -99,11 +99,11 @@ fun ReminderListScreen(
             contentPadding = PaddingValues(16.dp),
             verticalArrangement = Arrangement.spacedBy(12.dp)
         ) {
-            // Pastikan pemanggilan di sini adalah state.reminders (jamak)
+            
             items(state.reminder) { reminder ->
                 ReminderItem(
                     reminder = reminder,
-                    // PERBAIKAN: Aksi saat item di-klik (untuk EDIT)
+                    
                     onItemClick = {
                         navController.navigate(
                             Route.AddEditReminder.path
@@ -111,7 +111,7 @@ fun ReminderListScreen(
                                 .replace("{reminderId}", reminder.id.toString())
                         )
                     },
-                    // PERBAIKAN: Aksi saat tombol hapus di-klik
+                    
                     onDeleteClick = {
                         reminderToDelete = reminder
                         showDeleteDialog = true
@@ -129,7 +129,7 @@ fun ReminderListScreen(
             confirmButton = {
                 TextButton(
                     onClick = {
-                        // Jika "Hapus" ditekan, baru kirim event ke ViewModel
+                        
                         reminderToDelete?.let { viewModel.onEvent(ReminderEvent.OnDeleteReminder(it)) }
                         showDeleteDialog = false
                     }
@@ -152,7 +152,7 @@ fun ReminderItem(
     onItemClick: () -> Unit,
     onDeleteClick: () -> Unit
 ){
-    // Fungsi untuk format waktu dari Long ke String
+    
     val dateFormat = SimpleDateFormat("dd MMMM yyyy, HH:mm", Locale.getDefault())
     val formattedTime = dateFormat.format(Date(reminder.reminderTime))
 
@@ -161,7 +161,7 @@ fun ReminderItem(
             .fillMaxWidth()
             .clickable(onClick = onItemClick),
         elevation = CardDefaults.cardElevation(defaultElevation = 2.dp),
-        colors = CardDefaults.cardColors(containerColor = MaterialTheme.colorScheme.surfaceVariant) // Warna card
+        colors = CardDefaults.cardColors(containerColor = MaterialTheme.colorScheme.surfaceVariant) 
 
     ){
         Row(
@@ -177,13 +177,13 @@ fun ReminderItem(
                 Text(
                     text = reminder.title,
                     fontWeight = FontWeight.Bold,
-                    color = MaterialTheme.colorScheme.onSurfaceVariant // Warna teks judul
+                    color = MaterialTheme.colorScheme.onSurfaceVariant 
 
                 )
                 reminder.description?.let{
                     Text(
                         text = it,
-                        color = MaterialTheme.colorScheme.onSurfaceVariant.copy(alpha = 0.8f) // Warna teks deskripsi
+                        color = MaterialTheme.colorScheme.onSurfaceVariant.copy(alpha = 0.8f) 
                     )
                 }
                 Spacer(
@@ -193,11 +193,11 @@ fun ReminderItem(
                 Text(
                     text = "Waktu: $formattedTime",
                     style = MaterialTheme.typography.bodySmall,
-                    color = MaterialTheme.colorScheme.onSurfaceVariant.copy(alpha = 0.7f) // Warna teks waktu
+                    color = MaterialTheme.colorScheme.onSurfaceVariant.copy(alpha = 0.7f) 
 
                 )
             }
-            // PERBAIKAN: IconButton dipisahkan dari Column teks
+            
             IconButton(onClick = onDeleteClick){
                 Icon(Icons.Default.Delete, contentDescription = "Hapus Jadwal")
             }

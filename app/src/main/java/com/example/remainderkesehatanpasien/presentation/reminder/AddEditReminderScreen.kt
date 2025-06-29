@@ -59,12 +59,12 @@ fun AddEditReminderScreen(
     val state by viewModel.state
     val context = LocalContext.current
 
-    // Listener untuk event dari ViewModel (misal: simpan sukses)
+    
     LaunchedEffect(key1 = true) {
         viewModel.eventFlow.collectLatest { event ->
             when(event) {
                 is reminderUIEvent.SaveSuccess -> {
-                    navController.popBackStack() // Kembali ke layar list setelah sukses
+                    navController.popBackStack() 
                 }
                 is reminderUIEvent.ShowSnackbar -> {
                     Toast.makeText(context, event.message, Toast.LENGTH_SHORT).show()
@@ -73,13 +73,13 @@ fun AddEditReminderScreen(
         }
     }
 
-    // --- Logika untuk Date dan Time Picker ---
+    
     val calendar = Calendar.getInstance()
-    // State untuk memegang tanggal yang dipilih dari kalender
+    
     val datePickerDialog = DatePickerDialog(
         context,
         { _: DatePicker, year: Int, month: Int, dayOfMonth: Int ->
-            // Bulan di DatePickerDialog dimulai dari 0, jadi perlu +1
+            
             viewModel.onEvent(AddEditReminderEvent.OnDateChange(LocalDate.of(year, month + 1, dayOfMonth)))
         },
         calendar.get(Calendar.YEAR),
@@ -87,7 +87,7 @@ fun AddEditReminderScreen(
         calendar.get(Calendar.DAY_OF_MONTH)
     )
 
-    // State untuk memegang waktu yang dipilih dari jam
+    
     val timePickerDialog = TimePickerDialog(
         context,
         { _, hourOfDay: Int, minute: Int ->
@@ -95,14 +95,14 @@ fun AddEditReminderScreen(
         },
         calendar.get(Calendar.HOUR_OF_DAY),
         calendar.get(Calendar.MINUTE),
-        true // 24-hour format
+        true 
     )
 
     Scaffold(
         topBar = {
             TopAppBar(
                 title = { Text("Tambah Pengingat") },
-                colors = TopAppBarDefaults.topAppBarColors( // <-- Sesuaikan warna TopAppBar
+                colors = TopAppBarDefaults.topAppBarColors( 
                     containerColor = MaterialTheme.colorScheme.primary,
                     titleContentColor = MaterialTheme.colorScheme.onPrimary,
                     navigationIconContentColor = MaterialTheme.colorScheme.onPrimary
@@ -116,8 +116,8 @@ fun AddEditReminderScreen(
         },
         floatingActionButton = {
             FloatingActionButton(onClick = { viewModel.onEvent(AddEditReminderEvent.OnSaveReminder) },
-                containerColor = MaterialTheme.colorScheme.secondary, // Warna FAB
-                contentColor = MaterialTheme.colorScheme.onSecondary // Warna ikon di FAB
+                containerColor = MaterialTheme.colorScheme.secondary, 
+                contentColor = MaterialTheme.colorScheme.onSecondary 
             ) {
                 Icon(Icons.Default.Done, contentDescription = "Simpan")
             }
@@ -128,7 +128,7 @@ fun AddEditReminderScreen(
                 .fillMaxSize()
                 .padding(innerPadding)
                 .padding(16.dp)
-                .background(MaterialTheme.colorScheme.background), // Latar belakang dari tema
+                .background(MaterialTheme.colorScheme.background), 
             verticalArrangement = Arrangement.spacedBy(16.dp)
         ) {
             OutlinedTextField(
@@ -137,7 +137,7 @@ fun AddEditReminderScreen(
                 label = { Text("Judul Pengingat") },
                 modifier = Modifier.fillMaxWidth(),
                 singleLine = true,
-                colors = TextFieldDefaults.outlinedTextFieldColors( // Warna OutlinedTextField
+                colors = TextFieldDefaults.outlinedTextFieldColors( 
                     focusedBorderColor = MaterialTheme.colorScheme.primary,
                     unfocusedBorderColor = MaterialTheme.colorScheme.outline,
                     cursorColor = MaterialTheme.colorScheme.primary,
@@ -145,14 +145,14 @@ fun AddEditReminderScreen(
                     focusedLabelColor = MaterialTheme.colorScheme.primary,
                     unfocusedLabelColor = MaterialTheme.colorScheme.onSurfaceVariant.copy(alpha = 0.6f)
                 ),
-                shape = RoundedCornerShape(8.dp) // Sudut membulat
+                shape = RoundedCornerShape(8.dp) 
             )
             OutlinedTextField(
                 value = state.description,
                 onValueChange = { viewModel.onEvent(AddEditReminderEvent.OnDescriptionChange(it)) },
-                label = { Text("Deskripsi (opsional)", color = MaterialTheme.colorScheme.onSurfaceVariant.copy(alpha = 0.6f)) }, // Warna label/placeholder
+                label = { Text("Deskripsi (opsional)", color = MaterialTheme.colorScheme.onSurfaceVariant.copy(alpha = 0.6f)) }, 
                 modifier = Modifier.fillMaxWidth(),
-                colors = TextFieldDefaults.outlinedTextFieldColors( // Warna OutlinedTextField
+                colors = TextFieldDefaults.outlinedTextFieldColors( 
                     focusedBorderColor = MaterialTheme.colorScheme.primary,
                     unfocusedBorderColor = MaterialTheme.colorScheme.outline,
                     cursorColor = MaterialTheme.colorScheme.primary,
@@ -160,12 +160,12 @@ fun AddEditReminderScreen(
                     focusedLabelColor = MaterialTheme.colorScheme.primary,
                     unfocusedLabelColor = MaterialTheme.colorScheme.onSurfaceVariant.copy(alpha = 0.6f)
                 ),
-                shape = RoundedCornerShape(8.dp) // Sudut membulat
+                shape = RoundedCornerShape(8.dp) 
             )
 
-            Divider(color = MaterialTheme.colorScheme.outline) // Warna divider
+            Divider(color = MaterialTheme.colorScheme.outline) 
 
-            // Baris untuk memilih tanggal
+            
             Row(
                 modifier = Modifier
                     .fillMaxWidth()
@@ -177,26 +177,26 @@ fun AddEditReminderScreen(
                 Spacer(modifier = Modifier.width(16.dp))
                 Text(
                     text = "Tanggal: ${state.reminderDate.format(DateTimeFormatter.ofPattern("dd MMMM yyyy"))}",
-                    color = MaterialTheme.colorScheme.onSurface // Warna teks
+                    color = MaterialTheme.colorScheme.onSurface 
                 )
             }
 
-            // Baris untuk memilih waktu
+            
             Row(
                 modifier = Modifier
                     .fillMaxWidth()
                     .clickable { timePickerDialog.show() },
                 verticalAlignment = Alignment.CenterVertically
             ) {
-                Icon(painter = painterResource(id = R.drawable.time), contentDescription = "Waktu") // Asumsi Anda punya ikon waktu
+                Icon(painter = painterResource(id = R.drawable.time), contentDescription = "Waktu") 
                 Spacer(modifier = Modifier.width(16.dp))
                 Text(
                     text = "Waktu: ${state.reminderTime.format(DateTimeFormatter.ofPattern("HH:mm"))}",
-                    color = MaterialTheme.colorScheme.onSurface // Warna teks
+                    color = MaterialTheme.colorScheme.onSurface 
                     )
             }
 
-            // Baris untuk Switch "Sepanjang Hari"
+            
             Row(
                 modifier = Modifier.fillMaxWidth(),
                 verticalAlignment = Alignment.CenterVertically,
@@ -208,7 +208,7 @@ fun AddEditReminderScreen(
                 Switch(
                     checked = state.allDay,
                     onCheckedChange = { viewModel.onEvent(AddEditReminderEvent.OnAllDayToggle(it)) },
-                    colors = SwitchDefaults.colors( // Sesuaikan warna switch
+                    colors = SwitchDefaults.colors( 
                         checkedThumbColor = MaterialTheme.colorScheme.primary,
                         checkedTrackColor = MaterialTheme.colorScheme.primary.copy(alpha = 0.5f),
                         uncheckedThumbColor = MaterialTheme.colorScheme.onSurfaceVariant.copy(alpha = 0.8f),

@@ -60,7 +60,7 @@ fun LoginScreen(
 
     val emailState = viewModel.loginEmail
     val passwordState = viewModel.loginPassword
-    var passwordVisibility by remember { mutableStateOf(false) } // State untuk visibility password
+    var passwordVisibility by remember { mutableStateOf(false) }
 
     val context = LocalContext.current
 
@@ -68,14 +68,12 @@ fun LoginScreen(
         viewModel.uiEvent.collectLatest { event ->
             when (event) {
                 is AuthUiEvent.ShowSnackbar -> {
-                    // Gunakan Snackbar atau Toast untuk pesan error
-                    // Untuk kesederhanaan, kita akan pakai Toast dulu seperti di AddNoteScreen
                     android.widget.Toast.makeText(context, event.message, android.widget.Toast.LENGTH_SHORT).show()
                 }
                 AuthUiEvent.LoginSuccess -> {
-                    onLoginClicked() // Navigasi ke Dashboard jika login sukses
+                    onLoginClicked()
                 }
-                else -> Unit // Handle event lain jika ada
+                else -> Unit
             }
         }
     }
@@ -141,26 +139,25 @@ fun LoginScreen(
                         shape = RoundedCornerShape(12.dp)
                     ),
                 shape = RoundedCornerShape(12.dp),
-                colors = TextFieldDefaults.colors( // Sesuaikan warna TextField
+                colors = TextFieldDefaults.colors(
                     focusedContainerColor = Color.Transparent,
                     unfocusedContainerColor = Color.Transparent,
                     disabledContainerColor = Color.Transparent,
                     focusedTextColor = MaterialTheme.colorScheme.onSurface,
                     unfocusedTextColor = MaterialTheme.colorScheme.onSurface,
-                    cursorColor = MaterialTheme.colorScheme.primary, // Warna kursor
-                    focusedIndicatorColor = MaterialTheme.colorScheme.primary, // Warna indikator saat fokus
-                    unfocusedIndicatorColor = MaterialTheme.colorScheme.outline // Warna indikator saat tidak fokus
+                    cursorColor = MaterialTheme.colorScheme.primary,
+                    focusedIndicatorColor = MaterialTheme.colorScheme.primary,
+                    unfocusedIndicatorColor = MaterialTheme.colorScheme.outline
                 ),
                 trailingIcon = {
                     Icon(
                         imageVector = if (passwordVisibility) Icons.Default.Visibility else Icons.Default.VisibilityOff,
                         contentDescription = "Password visibility",
                         tint = MaterialTheme.colorScheme.onSurfaceVariant.copy(alpha = 0.6f),
-                        modifier = Modifier.clickable { passwordVisibility = !passwordVisibility } // Toggle visibility
+                        modifier = Modifier.clickable { passwordVisibility = !passwordVisibility }
                     )
                 }
             )
-            //password error akan ditampilkan di bawah textfield
             passwordState.error?.let{error->
                 Text(
                     text = error,
@@ -182,7 +179,7 @@ fun LoginScreen(
                     ),
                 shape = RoundedCornerShape(12.dp),
                 colors = ButtonDefaults.buttonColors(
-                    containerColor = Color.Transparent // Atur transparan agar background Modifier yang terlihat
+                    containerColor = Color.Transparent
                 )
 
             ) {
@@ -206,7 +203,7 @@ fun LoginScreen(
             ){
                 Text(
                     text = "Tidak punya akun? Daftar",
-                    color = MaterialTheme.colorScheme.onBackground.copy(alpha = 0.7f), // Warna teks
+                    color = MaterialTheme.colorScheme.onBackground.copy(alpha = 0.7f),
                     fontStyle = FontStyle.Normal
                 )
                 Text(

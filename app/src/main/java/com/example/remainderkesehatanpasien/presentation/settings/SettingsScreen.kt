@@ -77,7 +77,7 @@ fun SettingsScreen(
                 .constrainAs(border){
                     top.linkTo(parent.top)
                     start.linkTo(parent.start)
-                }.background(MaterialTheme.colorScheme.primary), // Warna utama dari tema
+                }.background(MaterialTheme.colorScheme.primary), 
 
                 )
             Row(modifier = Modifier
@@ -112,7 +112,7 @@ fun SettingsScreen(
                 ){
                     Text(
                         text = "Pengaturan",
-                        color = MaterialTheme.colorScheme.onPrimary, // Warna teks di atas primary
+                        color = MaterialTheme.colorScheme.onPrimary, 
                         fontSize = 25.sp,
                         fontStyle = FontStyle.Normal,
                         fontWeight = FontWeight.Bold
@@ -142,20 +142,20 @@ fun SettingsScreen(
 
         Spacer(modifier = Modifier.height(24.dp))
 
-        // Bagian Akun
+        
         SettingCategoryHeader("Akun")
         SettingsItem(
             icon = Icons.Default.AccountCircle,
             mainText = "Info Akun",
-            onClick = onProfileClicked // Navigasi ke halaman profil
+            onClick = onProfileClicked 
         )
         SettingsItem(
             icon = Icons.Default.Lock,
             mainText = "Login dan Keamanan",
-            onClick = onLoginSecurityClicked // Navigasi ke halaman ubah password
+            onClick = onLoginSecurityClicked 
         )
 
-        // Bagian Preferensi
+        
         SettingCategoryHeader("Preferensi")
         SettingsSwitchItem(
             icon = Icons.Default.Palette,
@@ -164,19 +164,19 @@ fun SettingsScreen(
             onCheckedChange = { isChecked -> onToggleDarkMode(isChecked) }
         )
 
-        // Bagian Keluar
-        Spacer(modifier = Modifier.height(24.dp)) // Tambahkan jarak
-        SettingCategoryHeader("Lainnya") // Kategori baru untuk Logout
+        
+        Spacer(modifier = Modifier.height(24.dp)) 
+        SettingCategoryHeader("Lainnya") 
         SettingsItem(
-            icon = Icons.Default.ExitToApp, // Ikon keluar
+            icon = Icons.Default.ExitToApp, 
             mainText = "Keluar Akun",
-            onClick = onLogoutClicked // <-- Panggil fungsi logout
+            onClick = onLogoutClicked 
         )
 
         Button(
             onClick = { throw RuntimeException("Test Crash dari Tombol Pengaturan") },
             modifier = Modifier.padding(16.dp),
-            colors = ButtonDefaults.buttonColors(containerColor = MaterialTheme.colorScheme.error) // Warna error dari tema
+            colors = ButtonDefaults.buttonColors(containerColor = MaterialTheme.colorScheme.error) 
         ) {
             Text("Tes Crash Aplikasi", color = MaterialTheme.colorScheme.onError)
         }
@@ -187,7 +187,7 @@ fun SettingsScreen(
 fun SettingCategoryHeader(title: String) {
     Text(
         text = title,
-        color = MaterialTheme.colorScheme.onBackground, // Warna teks dari tema
+        color = MaterialTheme.colorScheme.onBackground, 
         fontSize = 20.sp,
         fontStyle = FontStyle.Normal,
         fontWeight = FontWeight.Bold,
@@ -206,24 +206,24 @@ fun SettingsItem(
     Card(
         onClick = onClick,
         modifier = Modifier
-            .padding(bottom = 8.dp, start = 14.dp, end = 14.dp) // Sesuaikan padding
+            .padding(bottom = 8.dp, start = 14.dp, end = 14.dp) 
             .fillMaxWidth(),
-        colors = CardDefaults.cardColors(containerColor = MaterialTheme.colorScheme.surfaceVariant), // Warna surface variant dari tema
-        elevation = CardDefaults.cardElevation(defaultElevation = 2.dp), // Beri sedikit elevasi
-        shape = RoundedCornerShape(8.dp) // Sudut membulat
+        colors = CardDefaults.cardColors(containerColor = MaterialTheme.colorScheme.surfaceVariant), 
+        elevation = CardDefaults.cardElevation(defaultElevation = 2.dp), 
+        shape = RoundedCornerShape(8.dp) 
     ) {
         Row(
             modifier = Modifier
-                .padding(vertical = 14.dp, horizontal = 16.dp), // Sesuaikan padding
+                .padding(vertical = 14.dp, horizontal = 16.dp), 
             verticalAlignment = Alignment.CenterVertically,
             horizontalArrangement = Arrangement.SpaceBetween
         ){
             Row(verticalAlignment = Alignment.CenterVertically) {
-                // Gunakan Icon langsung dari ImageVector
+                
                 Icon(
                     imageVector = icon,
-                    contentDescription = null, // Content description for accessibility
-                    tint = MaterialTheme.colorScheme.primary, // Warna ikon
+                    contentDescription = null, 
+                    tint = MaterialTheme.colorScheme.primary, 
                     modifier = Modifier.size(24.dp)
                 )
 
@@ -231,13 +231,13 @@ fun SettingsItem(
 
                 Text(
                     text = mainText,
-                    style = MaterialTheme.typography.bodyLarge, // Gaya teks
-                    color = MaterialTheme.colorScheme.onSurfaceVariant, // Warna teks di atas surface variant
+                    style = MaterialTheme.typography.bodyLarge, 
+                    color = MaterialTheme.colorScheme.onSurfaceVariant, 
                     fontWeight = FontWeight.Normal
                 )
             }
             Icon(
-                painter = painterResource(id = R.drawable.ic_arrow_forward), // Asumsi Anda punya ikon panah maju
+                painter = painterResource(id = R.drawable.ic_arrow_forward), 
                 contentDescription = "Forward",
                 tint = MaterialTheme.colorScheme.onSurfaceVariant.copy(alpha = 0.6f),
                 modifier = Modifier.size(20.dp)
@@ -303,9 +303,9 @@ fun SettingsPreview(){
             onProfileClicked = {},
             onHomeClicked = {},
             darkMode = previewDarkMode,
-            onToggleDarkMode = { isChecked -> previewDarkMode = isChecked }, // <-- PERBAIKI DI SINI
+            onToggleDarkMode = { isChecked -> previewDarkMode = isChecked }, 
             onLoginSecurityClicked = {},
-            onNotificationsEnabled = { isEnabled -> /* do nothing for preview */ }, // <-- PERBAIKI DI SINI
+            onNotificationsEnabled = { isEnabled -> /* do nothing for preview */ }, 
             onLogoutClicked = {}
         )
     }

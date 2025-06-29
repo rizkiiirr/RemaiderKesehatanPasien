@@ -71,14 +71,14 @@ fun DashboardScreen(
     onSearchClicked: () -> Unit,
     onListNoteClicked: () -> Unit,
     newsViewModel: NewsViewModel = hiltViewModel(),
-    dashboardViewModel: DashboardViewModel = hiltViewModel(), // Injeksi DashboardViewModel
+    dashboardViewModel: DashboardViewModel = hiltViewModel(), 
     onNewsMoreClicked: () -> Unit,
     onCheckListClicked: () -> Unit,
     onDrinkMedicineClicked: () -> Unit,
     onConsultationClicked: () -> Unit
 ){
     val newsState = newsViewModel.state.value
-    val currentUser by dashboardViewModel.currentUser.collectAsState() // Ambil currentUser dari DashboardViewModel
+    val currentUser by dashboardViewModel.currentUser.collectAsState() 
 
     Scaffold(
         bottomBar = {
@@ -149,7 +149,7 @@ fun DashboardScreen(
             NewsSection(
                 newsState = newsState,
                 onNewsMoreClicked = onNewsMoreClicked,
-                onArticleClick = { /* Nanti bisa diimplementasikan untuk membuka artikel di WebView jika perlu, atau cukup buka link */ }
+                onArticleClick = { }
             )
 
 
@@ -180,7 +180,7 @@ fun DashboardScreen(
                         modifier = Modifier
                             .padding(top = 8.dp, bottom = 4.dp)
                             .background(
-                                color = MaterialTheme.colorScheme.secondary, // Warna secondary dari tema
+                                color = MaterialTheme.colorScheme.secondary, 
                                 shape = RoundedCornerShape(10.dp)
                             )
                             .padding(16.dp)
@@ -188,7 +188,7 @@ fun DashboardScreen(
                     )
                     Text(
                         text = "Minum Obat",
-                        color = MaterialTheme.colorScheme.onBackground, // Warna teks dari tema
+                        color = MaterialTheme.colorScheme.onBackground, 
                         fontSize = 14.sp,
                         fontWeight = FontWeight.Bold,
                         modifier = Modifier
@@ -207,7 +207,7 @@ fun DashboardScreen(
                         Modifier
                             .padding(top = 8.dp, bottom = 4.dp)
                             .background(
-                                color = MaterialTheme.colorScheme.secondary, // Warna secondary dari tema
+                                color = MaterialTheme.colorScheme.secondary, 
                                 shape = RoundedCornerShape(10.dp)
                             )
                             .padding(16.dp)
@@ -215,7 +215,7 @@ fun DashboardScreen(
                     )
                     Text(
                         text = "Jadwal Konsultasi",
-                        color = MaterialTheme.colorScheme.onBackground, // Warna teks dari tema
+                        color = MaterialTheme.colorScheme.onBackground, 
                         fontSize = 14.sp,
                         fontWeight = FontWeight.Bold,
                         modifier = Modifier
@@ -241,7 +241,7 @@ fun DashboardScreen(
                         Modifier
                             .padding(top = 8.dp, bottom = 4.dp)
                             .background(
-                                color = MaterialTheme.colorScheme.secondary, // Warna secondary dari tema
+                                color = MaterialTheme.colorScheme.secondary, 
                                 shape = RoundedCornerShape(10.dp)
                             )
                             .padding(16.dp)
@@ -249,7 +249,7 @@ fun DashboardScreen(
                     )
                     Text(
                         text = "Cek Riwayat",
-                        color = MaterialTheme.colorScheme.onBackground, // Warna teks dari tema
+                        color = MaterialTheme.colorScheme.onBackground, 
                         fontSize = 14.sp,
                         fontWeight = FontWeight.Bold,
                         modifier = Modifier
@@ -267,7 +267,7 @@ fun DashboardScreen(
                         Modifier
                             .padding(top = 8.dp, bottom = 4.dp)
                             .background(
-                                color = MaterialTheme.colorScheme.secondary, // Warna secondary dari tema
+                                color = MaterialTheme.colorScheme.secondary, 
                                 shape = RoundedCornerShape(10.dp)
                             )
                             .padding(16.dp)
@@ -277,7 +277,7 @@ fun DashboardScreen(
                     )
                     Text(
                         text = "Catatan Kesehatan",
-                        color = MaterialTheme.colorScheme.onBackground, // Warna teks dari tema
+                        color = MaterialTheme.colorScheme.onBackground, 
                         fontSize = 14.sp,
                         fontWeight = FontWeight.Bold,
                         modifier = Modifier
@@ -305,10 +305,10 @@ fun BottomNavigationBar(
     )
     val currentRoute = navController.currentBackStackEntryAsState().value?.destination?.route
     NavigationBar(
-        containerColor = MaterialTheme.colorScheme.surface // Warna container dari tema
+        containerColor = MaterialTheme.colorScheme.surface 
     ) {
         Row(
-            modifier = Modifier.background(MaterialTheme.colorScheme.surface) // Latar belakang bar
+            modifier = Modifier.background(MaterialTheme.colorScheme.surface) 
         ) {
             bottoms.forEach { item ->
                 NavigationBarItem(
@@ -346,7 +346,7 @@ fun NewsSection(
     onNewsMoreClicked: () -> Unit,
     onArticleClick: (Article) -> Unit
 ) {
-    val uriHandler = LocalUriHandler.current // Untuk membuka URL artikel
+    val uriHandler = LocalUriHandler.current 
 
     Column(
         modifier = Modifier
@@ -360,32 +360,32 @@ fun NewsSection(
         ) {
             Text(
                 text = "Berita Terbaru",
-                color = MaterialTheme.colorScheme.onBackground, // Warna teks
+                color = MaterialTheme.colorScheme.onBackground, 
                 fontSize = 20.sp,
                 fontWeight = FontWeight.Bold
             )
             Text(
                 text = "Berita Lainnya",
-                color = MaterialTheme.colorScheme.primary, // Warna primary untuk link
+                color = MaterialTheme.colorScheme.primary, 
                 fontSize = 16.sp,
                 fontWeight = FontWeight.SemiBold,
-                modifier = Modifier.clickable { onNewsMoreClicked() } // Klik untuk ke NewsScreen
+                modifier = Modifier.clickable { onNewsMoreClicked() } 
             )
         }
         Spacer(modifier = Modifier.height(16.dp))
 
         if (newsState.isLoading) {
-            LinearProgressIndicator(modifier = Modifier.fillMaxWidth()) // Indikator loading
+            LinearProgressIndicator(modifier = Modifier.fillMaxWidth()) 
         } else if (newsState.error != null) {
             Text(
                 text = "Gagal memuat berita: ${newsState.error}",
-                color = MaterialTheme.colorScheme.error, // Warna error
+                color = MaterialTheme.colorScheme.error, 
                 modifier = Modifier.fillMaxWidth()
             )
         } else if (newsState.articles.isEmpty()) {
             Text(
                 text = "Tidak ada berita terbaru yang tersedia.",
-                color = MaterialTheme.colorScheme.onBackground.copy(alpha = 0.7f), // Warna teks
+                color = MaterialTheme.colorScheme.onBackground.copy(alpha = 0.7f), 
                 modifier = Modifier.fillMaxWidth()
             )
         } else {
@@ -396,8 +396,8 @@ fun NewsSection(
             ) {
                 items(newsState.articles) { article ->
                     NewsCardItem(article = article) {
-                        onArticleClick(article) // Teruskan artikel yang diklik
-                        uriHandler.openUri(article.url) // Buka URL langsung
+                        onArticleClick(article) 
+                        uriHandler.openUri(article.url) 
                     }
                 }
             }
@@ -405,32 +405,32 @@ fun NewsSection(
     }
 }
 
-// Komponen NewsCardItem juga perlu di update untuk menampilkan gambar
+
 @Composable
 fun NewsCardItem(article: Article, onClick: () -> Unit) {
     Card(
         modifier = Modifier
-            .width(280.dp) // Lebar tetap untuk setiap kartu berita horizontal
-            .height(220.dp) // Sesuaikan tinggi agar gambar muat
+            .width(280.dp) 
+            .height(220.dp) 
             .clickable { onClick() },
         shape = RoundedCornerShape(12.dp),
         elevation = CardDefaults.cardElevation(defaultElevation = 4.dp),
-        colors = CardDefaults.cardColors(containerColor = MaterialTheme.colorScheme.surfaceVariant) // Warna permukaan dari tema
+        colors = CardDefaults.cardColors(containerColor = MaterialTheme.colorScheme.surfaceVariant) 
     ) {
         Column(
             modifier = Modifier
                 .fillMaxSize()
         ) {
-            // Gambar artikel di bagian atas kartu
+            
             article.urlToImage?.let { imageUrl ->
                 AsyncImage(
                     model = imageUrl,
                     contentDescription = article.title,
                     modifier = Modifier
                         .fillMaxWidth()
-                        .height(120.dp) // Tinggi gambar di kartu kecil
-                        .clip(RoundedCornerShape(topStart = 12.dp, topEnd = 12.dp)), // Sudut membulat hanya di atas
-                    contentScale = ContentScale.Crop // Agar gambar mengisi area tanpa terdistorsi
+                        .height(120.dp) 
+                        .clip(RoundedCornerShape(topStart = 12.dp, topEnd = 12.dp)), 
+                    contentScale = ContentScale.Crop 
                 )
             }
             Column(
@@ -441,7 +441,7 @@ fun NewsCardItem(article: Article, onClick: () -> Unit) {
                 Text(
                     text = article.title,
                     style = MaterialTheme.typography.titleSmall.copy(fontWeight = FontWeight.Bold),
-                    color = MaterialTheme.colorScheme.onSurfaceVariant, // Warna teks
+                    color = MaterialTheme.colorScheme.onSurfaceVariant, 
                     maxLines = 2,
                     overflow = TextOverflow.Ellipsis
                 )
@@ -455,9 +455,9 @@ fun NewsCardItem(article: Article, onClick: () -> Unit) {
                         overflow = TextOverflow.Ellipsis
                     )
                 }
-                Spacer(modifier = Modifier.weight(1f)) // Dorong konten ke atas
+                Spacer(modifier = Modifier.weight(1f)) 
                 Text(
-                    text = article.publishedAt.substringBefore("T"), // Hanya tanggal
+                    text = article.publishedAt.substringBefore("T"), 
                     style = MaterialTheme.typography.bodySmall,
                     color = MaterialTheme.colorScheme.onSurfaceVariant.copy(alpha = 0.6f)
                 )
@@ -478,8 +478,8 @@ fun DashboardPreview() {
             onSettingsClicked = {},
             onSearchClicked = {},
             onListNoteClicked = {},
-            newsViewModel = hiltViewModel(), // Injeksi ViewModel untuk preview juga
-            dashboardViewModel = hiltViewModel(), // <--- Untuk preview, bisa gunakan viewModel() atau buat dummy
+            newsViewModel = hiltViewModel(), 
+            dashboardViewModel = hiltViewModel(), 
             onNewsMoreClicked = {},
             onCheckListClicked = {},
             onDrinkMedicineClicked = {},

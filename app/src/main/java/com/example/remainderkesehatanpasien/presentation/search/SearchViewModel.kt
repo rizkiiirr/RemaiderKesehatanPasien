@@ -25,10 +25,10 @@ class SearchViewModel @Inject constructor(
     private val _searchQuery = MutableStateFlow("")
     val searchQuery = _searchQuery.asStateFlow()
 
-    // Ini adalah bagian yang paling canggih:
-    // Setiap kali `searchQuery` berubah, `flatMapLatest` akan secara otomatis
-    // membatalkan pencarian lama dan memulai pencarian baru dengan query terbaru.
-    // Hasilnya akan selalu terupdate secara reaktif.
+    
+    
+    
+    
     val searchResults = searchQuery
         .flatMapLatest { query ->
             searchUseCase(query)

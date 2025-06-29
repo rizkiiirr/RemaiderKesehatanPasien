@@ -52,7 +52,7 @@ import androidx.navigation.NavController
 import androidx.navigation.compose.rememberNavController
 import com.example.remainderkesehatanpasien.component.CustomTextField
 import com.example.remainderkesehatanpasien.ui.theme.RemainderKesehatanPasienTheme
-import kotlinx.coroutines.flow.collectLatest // Import collectLatest
+import kotlinx.coroutines.flow.collectLatest 
 
 @Composable
 fun RegisterScreen(
@@ -65,7 +65,7 @@ fun RegisterScreen(
     val usernameState = viewModel.registerUsername
     val emailState = viewModel.registerEmail
     val passwordState = viewModel.registerPassword
-    var passwordVisibility by remember { mutableStateOf(false) } // State untuk visibility password
+    var passwordVisibility by remember { mutableStateOf(false) } 
 
     val context = LocalContext.current
 
@@ -76,10 +76,10 @@ fun RegisterScreen(
                     android.widget.Toast.makeText(context, event.message, android.widget.Toast.LENGTH_SHORT).show()
                 }
                 AuthUiEvent.RegistrationSuccess -> {
-                    // Setelah registrasi sukses, kembali ke halaman Login.
+                    
                     navController.popBackStack()
                 }
-                else -> Unit // Handle event lain jika ada
+                else -> Unit 
             }
         }
     }
@@ -164,8 +164,8 @@ fun RegisterScreen(
                         tint = MaterialTheme.colorScheme.onSurfaceVariant.copy(alpha = 0.6f)
                     )
                 },
-                keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Password), // <--- Tipe keyboard untuk password
-                visualTransformation = if (passwordVisibility) VisualTransformation.None else PasswordVisualTransformation(), // <--- Atur visibilitas
+                keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Password), 
+                visualTransformation = if (passwordVisibility) VisualTransformation.None else PasswordVisualTransformation(), 
                 modifier = Modifier
                     .fillMaxWidth()
                     .padding(horizontal = 8.dp, vertical = 16.dp)
@@ -175,22 +175,22 @@ fun RegisterScreen(
                         shape = RoundedCornerShape(12.dp)
                     ),
                 shape = RoundedCornerShape(12.dp),
-                colors = TextFieldDefaults.colors( // Sesuaikan warna TextField
+                colors = TextFieldDefaults.colors( 
                     focusedContainerColor = Color.Transparent,
                     unfocusedContainerColor = Color.Transparent,
                     disabledContainerColor = Color.Transparent,
                     focusedTextColor = MaterialTheme.colorScheme.onSurface,
                     unfocusedTextColor = MaterialTheme.colorScheme.onSurface,
-                    cursorColor = MaterialTheme.colorScheme.primary, // Warna kursor
-                    focusedIndicatorColor = MaterialTheme.colorScheme.primary, // Warna indikator saat fokus
-                    unfocusedIndicatorColor = MaterialTheme.colorScheme.outline // Warna indikator saat tidak fokus
+                    cursorColor = MaterialTheme.colorScheme.primary, 
+                    focusedIndicatorColor = MaterialTheme.colorScheme.primary, 
+                    unfocusedIndicatorColor = MaterialTheme.colorScheme.outline 
                 ),
                 trailingIcon = {
                     Icon(
                         imageVector = if (passwordVisibility) Icons.Default.Visibility else Icons.Default.VisibilityOff,
                         contentDescription = "Visibility is wheter is true",
                         tint = MaterialTheme.colorScheme.onSurfaceVariant.copy(alpha = 0.6f),
-                        modifier = Modifier.clickable { passwordVisibility = !passwordVisibility } // Toggle visibility
+                        modifier = Modifier.clickable { passwordVisibility = !passwordVisibility } 
                     )
                 }
             )
@@ -204,7 +204,7 @@ fun RegisterScreen(
 
             Button(
                 onClick = {
-                    viewModel.onRegisterEvent(RegisterFormEvent.Register) // Panggil event register ke ViewModel
+                    viewModel.onRegisterEvent(RegisterFormEvent.Register) 
                 },
                 modifier = Modifier
                     .fillMaxWidth()
@@ -266,7 +266,7 @@ fun RegisterScreen(
 fun RegisterPreview() {
     RemainderKesehatanPasienTheme(darkTheme = false) {
         RegisterScreen(
-            navController = rememberNavController(), // Tambahkan ini untuk Preview
+            navController = rememberNavController(), 
             onTextHereClicked = {},
             onRegisterButtonClicked = {},
         )

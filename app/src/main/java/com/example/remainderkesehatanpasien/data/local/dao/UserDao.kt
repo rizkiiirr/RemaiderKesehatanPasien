@@ -8,12 +8,10 @@ import com.example.remainderkesehatanpasien.data.local.entity.User
 
 @Dao
 interface UserDao {
-
-    @Insert(onConflict = OnConflictStrategy.REPLACE) // Jika user dengan email yang sama ada, ganti
+    // Jika ada user dengan email yang sama
+    @Insert(onConflict = OnConflictStrategy.REPLACE)
     suspend fun insertUser(user: User)
 
     @Query("SELECT * FROM users_table WHERE email = :email LIMIT 1")
     suspend fun getUserByEmail(email: String): User?
-
-    // Anda bisa tambahkan query lain seperti deleteUser, updatePassword, dll. jika diperlukan
 }

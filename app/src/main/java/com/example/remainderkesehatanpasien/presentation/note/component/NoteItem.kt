@@ -30,7 +30,7 @@ fun NoteItem(
     Box(
         modifier = modifier
             .fillMaxWidth()
-            .shadow(2.dp, RoundedCornerShape(8.dp)) // <-- TAMBAHKAN SHADOW DI SINI
+            .shadow(2.dp, RoundedCornerShape(8.dp)) 
             .background(MaterialTheme.colorScheme.surfaceVariant, RoundedCornerShape(8.dp))
             .clickable { onItemClick() }
             .padding(16.dp)
@@ -39,7 +39,7 @@ fun NoteItem(
             modifier = Modifier
                 .fillMaxWidth()
                 .align(Alignment.CenterStart)
-                .padding(end = 32.dp) // Beri ruang untuk ikon delete
+                .padding(end = 32.dp) 
         ) {
             Text(
                 text = note.title,
@@ -59,12 +59,12 @@ fun NoteItem(
         }
         IconButton(
             onClick = onDeleteClick,
-            modifier = Modifier.align(Alignment.BottomEnd) // Posisikan di kanan bawah
+            modifier = Modifier.align(Alignment.BottomEnd) 
         ) {
             Icon(
                 imageVector = Icons.Default.Delete,
                 contentDescription = "Hapus Catatan",
-                tint = Color.Red // Warna ikon delete
+                tint = Color.Red 
             )
         }
     }

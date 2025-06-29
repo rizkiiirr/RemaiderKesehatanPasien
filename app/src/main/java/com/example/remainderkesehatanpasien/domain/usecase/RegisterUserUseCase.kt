@@ -7,19 +7,19 @@ import com.example.remainderkesehatanpasien.domain.repository.UserRepository
 class RegisterUserUseCase(
     private val userRepository: UserRepository
 ) {
-    @Throws(InvalidInputException::class) // Anotasi ini untuk menunjukkan pengecualian yang dilempar
+    @Throws(InvalidInputException::class)
     suspend operator fun invoke(email: String, username: String, fullName: String, passwordHash: String): Boolean {
-        // Lakukan validasi input di sini
+
         if (email.isBlank() || !android.util.Patterns.EMAIL_ADDRESS.matcher(email).matches()) {
             throw InvalidInputException("Email tidak valid.")
         }
         if (username.isBlank()) {
             throw InvalidInputException("Nama pengguna tidak boleh kosong.")
         }
-        if (fullName.isBlank()) { // <-- Validasi fullName
+        if (fullName.isBlank()) {
             throw InvalidInputException("Nama lengkap tidak boleh kosong.")
         }
-        if (passwordHash.length < 6) { // Asumsi passwordHash sudah di-hash (panjang minimal 6 karakter)
+        if (passwordHash.length < 6) {
             throw InvalidInputException("Password minimal 6 karakter.")
         }
 

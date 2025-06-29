@@ -39,12 +39,12 @@ import javax.inject.Singleton
 @InstallIn(SingletonComponent::class)
 object AppModule {
 
-    // --- Providers untuk Database Lokal (Note) ---
+    // provider database lokal
     @Provides
     @Singleton
     fun provideAppDatabase(app: Application): AppDatabase {
         return Room.databaseBuilder(app, AppDatabase::class.java, "note_db")
-            .fallbackToDestructiveMigration() // <-- TAMBAHKAN INI UNTUK MENGHINDARI CRASH SAAT UPGRADE VERSI DB
+            .fallbackToDestructiveMigration()
             .build()
     }
 
@@ -54,7 +54,6 @@ object AppModule {
         return NoteRepositoryImpl(db.noteDao())
     }
 
-    // Kita akan menyediakan semua use case dalam satu paket agar rapi
     @Provides
     @Singleton
     fun provideNoteUseCases(repository: NoteRepository): NoteUseCases {
@@ -66,33 +65,30 @@ object AppModule {
         )
     }
 
-    // --- Providers untuk NewsAPI (Fetching Data Remote) ---    // URL dasar untuk NewsAPI
+    //providers NewAPI
     private const val BASE_URL = "https://newsapi.org/v2/"
 
-    // Menyediakan OkHttpClient dengan Logging Interceptor
     @Provides
     @Singleton
     fun provideOkHttpClient(): OkHttpClient {
         val logging = HttpLoggingInterceptor().apply {
-            // Level BODY akan mencetak request dan response body di Logcat.
-            // Ganti ke NONE atau BASIC di produksi.
             setLevel(HttpLoggingInterceptor.Level.BODY)
         }
         return OkHttpClient.Builder()
             .addInterceptor(logging)
-            .connectTimeout(30, TimeUnit.SECONDS) // Contoh timeout koneksi
-            .readTimeout(30, TimeUnit.SECONDS) // Contoh timeout baca
+            .connectTimeout(30, TimeUnit.SECONDS)
+            .readTimeout(30, TimeUnit.SECONDS)
             .build()
     }
 
-    // Menyediakan instance Retrofit
+    // menyediakan instance Retrofit
     @Provides
     @Singleton
     fun provideRetrofit(okHttpClient: OkHttpClient): Retrofit {
         return Retrofit.Builder()
             .baseUrl(BASE_URL)
             .client(okHttpClient)
-            .addConverterFactory(GsonConverterFactory.create()) // Menggunakan Gson untuk konversi JSON
+            .addConverterFactory(GsonConverterFactory.create()) // menggunakan Gson untuk konversi JSON
             .build()
     }
 
@@ -102,35 +98,34 @@ object AppModule {
         return db.newsDao()
     }
 
-    // Menyediakan NewsApiService
+    // menyediakan NewsApiService
     @Provides
     @Singleton
     fun provideNewsApiService(retrofit: Retrofit): NewsApiService {
         return retrofit.create(NewsApiService::class.java)
     }
 
-    // Menyediakan NewsRemoteDataSource
+    // menyediakan NewsRemoteDataSource
     @Provides
     @Singleton
     fun provideNewsRemoteDataSource(newsApiService: NewsApiService): NewsRemoteDataSource {
         return NewsRemoteDataSource(newsApiService)
     }
 
-    // Menyediakan NewsRepository (implementasi)
     @Provides
     @Singleton
     fun provideNewsRepository(apiService: NewsApiService, newsDao: NewsDao): NewsRepository {
         return NewsRepositoryImpl(apiService, newsDao)
     }
 
-    // Menyediakan GetHealthNewsUseCase
+    // menyediakan GetHealthNewsUseCase
     @Provides
     @Singleton
     fun provideGetHealthNewsUseCase(repository: NewsRepository): GetHealthNewsUseCase {
         return GetHealthNewsUseCase(repository)
     }
 
-    // --- Providers untuk User (Login/Register) ---
+    // providers untuk login dan regist
 
     @Provides
     @Singleton
@@ -156,17 +151,14 @@ object AppModule {
         return LoginUserUseCase(userRepository)
     }
 
-    // --- Provider untuk Image Storage Manager ---
+    // provider image manager
     @Provides
     @Singleton
     fun provideImageStorageManager(@ApplicationContext context: Context): ImageStorageManager {
         return ImageStorageManager(context)
     }
 
-    // Tidak perlu menyediakan SessionManager secara eksplisit jika SessionManager sendiri dianotasi @Singleton dan @Inject constructor
-    // Hilt akan otomatis membuat dan mengelola instance-nya.
-
-    // --- Providers untuk Fitur Checklist ---
+    // provider checklist
     @Provides
     @Singleton
     fun provideCheckListRepository(db: AppDatabase): CheckListRepository{
@@ -196,8 +188,6 @@ object AppModule {
         return ReminderRepositoryImpl(dao)
     }
 
-    // Anda bisa juga membuat ReminderUseCases wrapper jika mau,
-    // tapi untuk sekarang kita sediakan satu per satu.
     @Provides
     @Singleton
     fun provideAddReminderUseCase(repository: ReminderRepository): AddReminderUseCase {

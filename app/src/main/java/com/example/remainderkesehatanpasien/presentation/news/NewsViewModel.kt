@@ -12,7 +12,7 @@ import kotlinx.coroutines.flow.launchIn
 import kotlinx.coroutines.flow.onEach
 import javax.inject.Inject
 
-// Definisi state untuk layar berita
+
 data class NewsState(
     val articles: List<Article> = emptyList(),
     val isLoading: Boolean = false,
@@ -21,39 +21,39 @@ data class NewsState(
 
 @HiltViewModel
 class NewsViewModel @Inject constructor(
-    private val getHealthNewsUseCase: GetHealthNewsUseCase // Injeksi Use Case
+    private val getHealthNewsUseCase: GetHealthNewsUseCase 
 ) : ViewModel() {
 
-    // State yang akan diobservasi oleh UI
+    
     private val _state = mutableStateOf(NewsState())
     val state: State<NewsState> = _state
 
     private var getNewsJob: Job? = null
 
-    // API Key NewsAPI Anda.
-    // PENTING: Untuk proyek sungguhan, jangan simpan API Key langsung di kode seperti ini.
-    // Gunakan BuildConfig, string resources terenkripsi, atau cara yang lebih aman.
-    // Untuk tujuan UAS dan demo, ini bisa diterima.
-    private val API_KEY = "881322c0c0f64c2d812cb62c2e0d6860" // <-- GANTI DENGAN API KEY ANDA
+    
+    
+    
+    
+    private val API_KEY = "881322c0c0f64c2d812cb62c2e0d6860" 
 
     init {
-        // Panggil saat ViewModel dibuat
-        getHealthNews("kesehatan") // Kata kunci default
+        
+        getHealthNews("kesehatan") 
     }
 
-    // Fungsi untuk mendapatkan berita kesehatan
+    
     fun getHealthNews(query: String) {
-        getNewsJob?.cancel() // Batalkan job sebelumnya jika ada
+        getNewsJob?.cancel() 
 
-        getNewsJob = getHealthNewsUseCase(query, API_KEY) // Panggil Use Case
+        getNewsJob = getHealthNewsUseCase(query, API_KEY) 
             .onEach { result ->
-                // Perbarui state berdasarkan hasil
+                
                 _state.value = _state.value.copy(
-                    articles = result, // Mengatur daftar artikel yang diterima
+                    articles = result, 
                     isLoading = false,
-                    error = null // Menghapus error sebelumnya
+                    error = null 
                 )
             }
-            .launchIn(viewModelScope) // Jalankan flow dalam ViewModel scope
+            .launchIn(viewModelScope) 
     }
 }

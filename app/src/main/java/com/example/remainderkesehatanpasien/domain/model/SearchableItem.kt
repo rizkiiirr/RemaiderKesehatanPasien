@@ -1,6 +1,5 @@
 package com.example.remainderkesehatanpasien.domain.model
 
-import java.sql.Timestamp
 
 enum class ItemType{
     NOTE, CHECKLIST, REMINDER

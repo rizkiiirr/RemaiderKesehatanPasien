@@ -22,7 +22,7 @@ import java.time.ZoneId
 import javax.inject.Inject
 
 data class AddEditReminderState(
-    val currentReminderId: Int = 0, // Untuk menyimpan ID saat mode edit
+    val currentReminderId: Int = 0, 
     val title: String = "",
     val description: String = "",
     val reminderDate : LocalDate = LocalDate.now(),
@@ -39,7 +39,7 @@ sealed class AddEditReminderEvent{
     object OnSaveReminder : AddEditReminderEvent()
 }
 
-// Event dari ViewModel ke UI
+
 sealed class reminderUIEvent{
     data class ShowSnackbar(val message: String) : reminderUIEvent()
     object SaveSuccess : reminderUIEvent()
@@ -62,12 +62,12 @@ class AddEditReminderViewModel @Inject constructor(
     private val reminderCategory: String = savedStateHandle.get<String>("category") ?: "UMUM"
 
     init {
-        // Cek apakah ada reminderId yang dikirim dari layar sebelumnya
+        
         savedStateHandle.get<Int>("reminderId")?.let { reminderId ->
-            if (reminderId != -1 && reminderId != 0) { // -1 atau 0 adalah nilai default untuk item baru
+            if (reminderId != -1 && reminderId != 0) { 
                 viewModelScope.launch {
                     getReminderUseCase(reminderId)?.also { reminder ->
-                        // Jika ada, isi semua state dengan data dari reminder tersebut
+                        
                         val instant = Instant.ofEpochMilli(reminder.reminderTime)
                         val localDateTime = LocalDateTime.ofInstant(instant, ZoneId.systemDefault())
 
@@ -95,13 +95,13 @@ class AddEditReminderViewModel @Inject constructor(
             is AddEditReminderEvent.OnSaveReminder -> {
                 viewModelScope.launch {
                     try {
-                        // Gabungkan tanggal dan waktu menjadi satu nilai Long (milidetik)
+                        
                         val localDateTime = LocalDateTime.of(state.value.reminderDate, state.value.reminderTime)
                         val instant = localDateTime.atZone(ZoneId.systemDefault()).toInstant()
                         val timeInMillis = instant.toEpochMilli()
 
                         val newReminder = Reminder(
-                            id = state.value.currentReminderId, // Gunakan ID yang ada jika mode edit
+                            id = state.value.currentReminderId, 
                             title = state.value.title,
                             description = state.value.description,
                             reminderTime = timeInMillis,

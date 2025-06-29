@@ -1,8 +1,8 @@
 package com.example.remainderkesehatanpasien.presentation.auth
 
-import androidx.compose.runtime.getValue // <-- PASTIKAN IMPORT INI ADA
-import androidx.compose.runtime.mutableStateOf // <-- PASTIKAN IMPORT INI ADA
-import androidx.compose.runtime.setValue // <-- PASTIKAN IMPORT INI ADA
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.setValue
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.remainderkesehatanpasien.domain.manager.SessionManager
@@ -13,28 +13,23 @@ import kotlinx.coroutines.flow.asSharedFlow
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
-// --- DEFINISI KELAS DATA DAN SEALED CLASS (HARUS ADA DI SINI ATAU DIIMPOR) ---
-// State untuk input password
+
 data class PasswordFieldState(
     val text: String = "",
     val error: String? = null
 )
 
-// Event yang dikirim dari ViewModel ke UI
 sealed class ChangePasswordUiEvent {
     data class ShowSnackbar(val message: String) : ChangePasswordUiEvent()
     object ChangePasswordSuccess : ChangePasswordUiEvent()
 }
 
-// Event yang dikirim dari UI ke ViewModel
 sealed class ChangePasswordFormEvent {
     data class EnteredCurrentPassword(val password: String) : ChangePasswordFormEvent()
     data class EnteredNewPassword(val password: String) : ChangePasswordFormEvent()
     data class EnteredConfirmNewPassword(val password: String) : ChangePasswordFormEvent()
     object SubmitChange : ChangePasswordFormEvent()
 }
-// --- AKHIR DEFINISI KELAS DATA DAN SEALED CLASS ---
-
 
 @HiltViewModel
 class ChangePasswordViewModel @Inject constructor(

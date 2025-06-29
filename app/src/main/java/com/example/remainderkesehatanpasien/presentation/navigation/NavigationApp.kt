@@ -10,7 +10,7 @@ import androidx.navigation.NavType
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.navArgument
-import androidx.navigation.navOptions // <-- IMPORT INI
+import androidx.navigation.navOptions 
 import com.example.remainderkesehatanpasien.presentation.auth.AuthViewModel
 import com.example.remainderkesehatanpasien.presentation.auth.ChangePasswordScreen
 import com.example.remainderkesehatanpasien.presentation.auth.LoginScreen
@@ -26,7 +26,7 @@ import com.example.remainderkesehatanpasien.presentation.reminder.ReminderListSc
 import com.example.remainderkesehatanpasien.presentation.search.SearchScreen
 import com.example.remainderkesehatanpasien.presentation.settings.SettingsScreen
 
-// Tambahkan rute baru untuk NewsScreen
+
 enum class Route(val path: String) {
     Login("login"),
     Register("register"),
@@ -62,7 +62,7 @@ fun NavigationApp(
                     onLoginClicked = {
                         navController.navigate(
                             Route.Dashboard.path,
-                            navOptions { // <-- GUNAKAN navOptions BUILDER INI
+                            navOptions { 
                                 popUpTo(Route.Login.path) { inclusive = true }
                             }
                         )
@@ -107,7 +107,7 @@ fun NavigationApp(
                         authViewModel.logoutUser()
                         navController.navigate(
                             Route.Login.path,
-                            navOptions { // <-- GUNAKAN navOptions BUILDER INI
+                            navOptions { 
                                 popUpTo(Route.Dashboard.path) {
                                     inclusive = true
                                 }
@@ -148,12 +148,12 @@ fun NavigationApp(
                 NewsScreen(navController = navController)
             }
 
-            composable(Route.ChangePassword.path) { // <-- PERBARUI INI
+            composable(Route.ChangePassword.path) { 
                 ChangePasswordScreen(navController = navController)
             }
 
             composable(Route.CheckList.path) {
-                CheckListScreen(navController = navController) // <-- TAMBAHKAN INI
+                CheckListScreen(navController = navController) 
             }
 
             composable(
@@ -170,7 +170,7 @@ fun NavigationApp(
                 route = Route.ReminderList.path,
                 arguments = listOf(navArgument("category") { type = NavType.StringType })
             ) {
-                // Pemanggilan menjadi sangat sederhana
+                
                 ReminderListScreen(navController = navController)
             }
         }

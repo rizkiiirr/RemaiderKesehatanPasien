@@ -16,7 +16,7 @@ interface ReminderDao {
     @Query("SELECT * FROM reminders ORDER BY reminderTime DESC")
     fun getAllReminders(): Flow<List<Reminder>>
 
-    @Query("SELECT * FROM reminders WHERE id = :id") // <-- TAMBAHKAN QUERY INI
+    @Query("SELECT * FROM reminders WHERE id = :id")
     suspend fun getReminderById(id: Int): Reminder?
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)

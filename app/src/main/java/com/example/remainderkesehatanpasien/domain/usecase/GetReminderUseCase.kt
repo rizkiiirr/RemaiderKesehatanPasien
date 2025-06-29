@@ -8,8 +8,6 @@ class GetReminderUseCase @Inject constructor(
     private val repository: ReminderRepository
 ) {
     suspend operator fun invoke(id: Int): Reminder? {
-        // Tugasnya hanya mengambil satu pengingat berdasarkan ID-nya
-        // (Kita perlu menambahkan fungsi ini ke repository)
         return repository.getReminderById(id)
     }
 }

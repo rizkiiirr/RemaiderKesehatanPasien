@@ -11,7 +11,3 @@ class NewsRemoteDataSource @Inject constructor(
         return newsApiService.getHealthNews(query = query, apiKey = apiKey)
     }
 }
-
-// Melakukan panggilan API dan mengembalikan respons
-// Di sini Anda bisa menambahkan penanganan error dasar jika diperlukan,
-// meskipun biasanya lebih baik ditangani di lapisan Repository atau Use

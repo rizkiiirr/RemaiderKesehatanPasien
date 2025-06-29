@@ -18,9 +18,9 @@ import com.example.remainderkesehatanpasien.presentation.note.NoteViewModel
 import com.example.remainderkesehatanpasien.presentation.note.UiEvent
 import kotlinx.coroutines.flow.collectLatest
 
-// NoteScreen sekarang akan menjadi wrapper untuk AddNoteScreen,
-// karena UI untuk Tambah dan Edit pada dasarnya sama.
-// Ini adalah praktik yang baik untuk menghindari duplikasi kode.
+
+
+
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun NoteScreen(
@@ -48,7 +48,7 @@ fun NoteScreen(
         topBar = {
             TopAppBar(
                 title = { Text("Buat Catatan") },
-                colors = TopAppBarDefaults.topAppBarColors( // <-- Sesuaikan warna TopAppBar
+                colors = TopAppBarDefaults.topAppBarColors( 
                     containerColor = MaterialTheme.colorScheme.primary,
                     titleContentColor = MaterialTheme.colorScheme.onPrimary,
                     navigationIconContentColor = MaterialTheme.colorScheme.onPrimary
@@ -61,7 +61,7 @@ fun NoteScreen(
         floatingActionButton = {
             FloatingActionButton(
                 onClick = { viewModel.onEvent(NoteEvent.SaveNote) },
-                containerColor = MaterialTheme.colorScheme.secondary, // Warna FAB
+                containerColor = MaterialTheme.colorScheme.secondary, 
                 contentColor = MaterialTheme.colorScheme.onSecondary
             ) {
                 Icon(imageVector = Icons.Default.Done, contentDescription = "Simpan Perubahan")
@@ -73,7 +73,7 @@ fun NoteScreen(
                 .fillMaxSize()
                 .padding(innerPadding)
                 .padding(16.dp)
-                .background(MaterialTheme.colorScheme.background) // Latar belakang dari tema
+                .background(MaterialTheme.colorScheme.background) 
         ) {
             TextField(
                 value = titleState.text,
@@ -81,7 +81,7 @@ fun NoteScreen(
                 placeholder = { Text(text = titleState.hint) },
                 modifier = Modifier.fillMaxWidth(),
                 singleLine = true,
-                colors = TextFieldDefaults.colors( // Sesuaikan warna TextField
+                colors = TextFieldDefaults.colors( 
                     focusedContainerColor = MaterialTheme.colorScheme.surface,
                     unfocusedContainerColor = MaterialTheme.colorScheme.surface,
                     disabledContainerColor = MaterialTheme.colorScheme.surface,
@@ -99,7 +99,7 @@ fun NoteScreen(
                 onValueChange = { viewModel.onEvent(NoteEvent.EnteredDescription(it)) },
                 placeholder = { Text(text = descriptionState.hint) },
                 modifier = Modifier.fillMaxSize(),
-                colors = TextFieldDefaults.colors( // Sesuaikan warna TextField
+                colors = TextFieldDefaults.colors( 
                     focusedContainerColor = MaterialTheme.colorScheme.surface,
                     unfocusedContainerColor = MaterialTheme.colorScheme.surface,
                     disabledContainerColor = MaterialTheme.colorScheme.surface,

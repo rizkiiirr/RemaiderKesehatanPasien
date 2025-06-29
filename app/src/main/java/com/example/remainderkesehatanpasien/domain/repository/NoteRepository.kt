@@ -3,8 +3,6 @@ package com.example.remainderkesehatanpasien.domain.repository
 import com.example.remainderkesehatanpasien.data.local.entity.Note
 import kotlinx.coroutines.flow.Flow
 
-// Ini adalah "kontrak". Domain hanya peduli apa yang bisa dilakukan,
-// bukan BAGAIMANA cara melakukannya.
 interface NoteRepository {
 
     fun getNotes(): Flow<List<Note>>

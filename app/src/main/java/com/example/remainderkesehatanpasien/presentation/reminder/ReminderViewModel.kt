@@ -22,15 +22,15 @@ import kotlinx.coroutines.flow.onEach
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
-// State untuk menampung daftar pengingat
+
 data class ReminderListState(
     val reminder: List<Reminder> = emptyList()
 )
 
-// Event dari UI ke ViewModel
+
 sealed class ReminderEvent{
     data class OnDeleteReminder(val reminder: Reminder) : ReminderEvent()
-    // Event lain akan kita tambahkan nanti (misal: OnSaveReminder)
+    
 }
 
 @HiltViewModel
@@ -72,19 +72,19 @@ class ReminderViewModel @Inject constructor(
         _showDeleteDialog.value = true
     }
 
-    // Fungsi untuk menutup dialog
+    
     fun onCloseDeleteDialog() {
         _reminderToDelete.value = null
         _showDeleteDialog.value = false
     }
 
-    // Fungsi untuk mengkonfirmasi penghapusan
+    
     fun onConfirmDelete() {
         viewModelScope.launch {
             _reminderToDelete.value?.let { reminder ->
                 deleteReminderUseCase(reminder)
             }
-            onCloseDeleteDialog() // Tutup dialog setelah selesai
+            onCloseDeleteDialog() 
         }
     }
 }

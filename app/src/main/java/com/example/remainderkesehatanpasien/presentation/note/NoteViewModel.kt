@@ -12,7 +12,7 @@ import kotlinx.coroutines.flow.*
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
-// Data class dan Sealed class versi final
+
 data class NoteListState(val notes: List<Note> = emptyList())
 data class NoteTextFieldState(val text: String = "", val hint: String = "")
 
@@ -51,7 +51,7 @@ class NoteViewModel @Inject constructor(
     init {
         getNotes()
         savedStateHandle.get<Int>("noteId")?.let { noteId ->
-            if (noteId != 0) { // Anggap 0 adalah ID default yang tidak valid
+            if (noteId != 0) { 
                 viewModelScope.launch {
                     noteUseCases.getNote(noteId)?.also { note ->
                         currentNoteId = note.id

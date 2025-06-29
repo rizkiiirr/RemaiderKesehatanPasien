@@ -31,13 +31,13 @@ fun NewsScreen(
     viewModel: NewsViewModel = hiltViewModel()
 ) {
     val state = viewModel.state.value
-    val uriHandler = LocalUriHandler.current // Untuk membuka URL artikel
+    val uriHandler = LocalUriHandler.current 
 
     Scaffold(
         topBar = {
             TopAppBar(
                 title = { Text("Berita Kesehatan Terbaru") },
-                colors = TopAppBarDefaults.topAppBarColors( // <-- Sesuaikan warna TopAppBar
+                colors = TopAppBarDefaults.topAppBarColors( 
                     containerColor = MaterialTheme.colorScheme.primary,
                     titleContentColor = MaterialTheme.colorScheme.onPrimary,
                     navigationIconContentColor = MaterialTheme.colorScheme.onPrimary
@@ -55,16 +55,16 @@ fun NewsScreen(
                 .fillMaxSize()
                 .padding(innerPadding)
                 .padding(horizontal = 8.dp)
-                .background(MaterialTheme.colorScheme.background) // Latar belakang dari tema
+                .background(MaterialTheme.colorScheme.background) 
         ) {
             if (state.isLoading) {
                 LinearProgressIndicator(
                     modifier = Modifier.fillMaxWidth(),
-                    color = MaterialTheme.colorScheme.secondary // Warna indikator loading
-                ) // Indikator loading
+                    color = MaterialTheme.colorScheme.secondary 
+                ) 
             } else if (state.error != null) {
                 Text("Error: ${state.error}",
-                    color = MaterialTheme.colorScheme.error, // Warna error dari tema
+                    color = MaterialTheme.colorScheme.error, 
                     modifier = Modifier.fillMaxWidth()
                 )
             } else {
@@ -74,7 +74,7 @@ fun NewsScreen(
                 ) {
                     items(state.articles) { article ->
                         ArticleItem(article = article) {
-                            // Saat artikel diklik, buka URL di browser
+                            
                             uriHandler.openUri(article.url)
                         }
                     }
@@ -92,19 +92,19 @@ fun ArticleItem(article: Article, onClick: () -> Unit) {
             .clickable { onClick() },
         shape = RoundedCornerShape(8.dp),
         elevation = CardDefaults.cardElevation(defaultElevation = 2.dp),
-        colors = CardDefaults.cardColors(containerColor = MaterialTheme.colorScheme.surfaceVariant) // Warna card dari tema
+        colors = CardDefaults.cardColors(containerColor = MaterialTheme.colorScheme.surfaceVariant) 
     ) {
         Column(modifier = Modifier.padding(16.dp)) {
-            // Gambar artikel
+            
             article.urlToImage?.let { imageUrl ->
                 AsyncImage(
                     model = imageUrl,
                     contentDescription = article.title,
                     modifier = Modifier
                         .fillMaxWidth()
-                        .height(180.dp) // Tinggi gambar
-                        .clip(RoundedCornerShape(8.dp)), // Sudut membulat pada gambar
-                    contentScale = ContentScale.Crop // Agar gambar mengisi area tanpa terdistorsi
+                        .height(180.dp) 
+                        .clip(RoundedCornerShape(8.dp)), 
+                    contentScale = ContentScale.Crop 
                 )
                 Spacer(modifier = Modifier.height(8.dp))
             }

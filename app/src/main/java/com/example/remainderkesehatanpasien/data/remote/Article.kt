@@ -9,11 +9,11 @@ data class Article(
     @PrimaryKey
     val url: String,
     @Embedded
-    val source: Source?, // Bisa null
-    val author: String?, // Bisa null
+    val source: Source?,
+    val author: String?,
     val title: String,
-    val description: String?, // Bisa null
-    val urlToImage: String?, // Bisa null
+    val description: String?,
+    val urlToImage: String?,
     val publishedAt: String,
-    val content: String? // Bisa null
+    val content: String?
 )

@@ -30,7 +30,7 @@ fun ListNoteScreen(
         topBar = {
             TopAppBar(
                 title = { Text("Catatan Anda") },
-                colors = TopAppBarDefaults.topAppBarColors( // <-- Sesuaikan warna TopAppBar
+                colors = TopAppBarDefaults.topAppBarColors( 
                     containerColor = MaterialTheme.colorScheme.primary,
                     titleContentColor = MaterialTheme.colorScheme.onPrimary,
                     navigationIconContentColor = MaterialTheme.colorScheme.onPrimary
@@ -45,7 +45,7 @@ fun ListNoteScreen(
         floatingActionButton = {
             FloatingActionButton(
                 onClick = { onAddNoteClicked() },
-                containerColor = MaterialTheme.colorScheme.secondary, // Warna FAB
+                containerColor = MaterialTheme.colorScheme.secondary, 
                 contentColor = MaterialTheme.colorScheme.onSecondary
                 ) {
                 Icon(Icons.Default.Add, contentDescription = "Tambah Catatan")
@@ -57,7 +57,7 @@ fun ListNoteScreen(
                 .fillMaxSize()
                 .padding(innerPadding)
                 .padding(horizontal = 8.dp)
-                .background(MaterialTheme.colorScheme.background), // Latar belakang dari tema
+                .background(MaterialTheme.colorScheme.background), 
             verticalArrangement = Arrangement.spacedBy(8.dp),
             contentPadding = PaddingValues(vertical = 8.dp)
         ) {

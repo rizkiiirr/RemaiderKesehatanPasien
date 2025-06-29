@@ -42,7 +42,7 @@ fun CheckListScreen(
     var showDialog by remember {mutableStateOf(false)}
     var itemToDelete by remember {mutableStateOf<CheckListItem?>(null)}
 
-    // State untuk dialog edit
+    
     var showEditDialog by remember { mutableStateOf(false) }
     var itemToEdit by remember { mutableStateOf<CheckListItem?>(null) }
     var editText by remember { mutableStateOf("") }
@@ -60,7 +60,7 @@ fun CheckListScreen(
         topBar = {
             TopAppBar(
                 title = { Text("Riwayat Pengecekan") },
-                colors = TopAppBarDefaults.topAppBarColors( // <-- Sesuaikan warna TopAppBar
+                colors = TopAppBarDefaults.topAppBarColors( 
                     containerColor = MaterialTheme.colorScheme.primary,
                     titleContentColor = MaterialTheme.colorScheme.onPrimary,
                     navigationIconContentColor = MaterialTheme.colorScheme.onPrimary
@@ -79,7 +79,7 @@ fun CheckListScreen(
                 .padding(innerPadding)
                 .padding(16.dp)
         ) {
-            // LazyColumn untuk menampilkan daftar item
+            
             LazyColumn(modifier = Modifier.weight(1f)) {
                 items(state.items) { item ->
                     ChecklistItemRow(
@@ -89,17 +89,17 @@ fun CheckListScreen(
                             itemToDelete = item
                             showDialog = true
                         },
-                        onEditClick = { // Tambahkan aksi untuk edit
+                        onEditClick = { 
                             itemToEdit = item
-                            editText = item.title // Isi textfield dengan judul saat ini
+                            editText = item.title 
                             showEditDialog = true
                         }
                     )
-                    Divider(color = MaterialTheme.colorScheme.outline) // Warna divider
+                    Divider(color = MaterialTheme.colorScheme.outline) 
                 }
             }
 
-            // Bagian untuk menambah item baru
+            
             Row(
                 modifier = Modifier
                     .fillMaxWidth()
@@ -111,11 +111,11 @@ fun CheckListScreen(
                     onValueChange = { viewModel.onEvent(CheckListEvent.OnNewItemTitleChange(it)) },
                     label = { Text("Tambah riwayat baru...") },
                     modifier = Modifier.weight(1f),
-                    colors = TextFieldDefaults.outlinedTextFieldColors( // Warna OutlinedTextField
+                    colors = TextFieldDefaults.outlinedTextFieldColors( 
                         focusedBorderColor = MaterialTheme.colorScheme.primary,
                         unfocusedBorderColor = MaterialTheme.colorScheme.outline,
                         cursorColor = MaterialTheme.colorScheme.primary,
-                        containerColor = MaterialTheme.colorScheme.surface, // Background TextField
+                        containerColor = MaterialTheme.colorScheme.surface, 
                         focusedLabelColor = MaterialTheme.colorScheme.primary,
                         unfocusedLabelColor = MaterialTheme.colorScheme.onSurfaceVariant.copy(alpha = 0.6f)
                     ),
@@ -126,7 +126,7 @@ fun CheckListScreen(
                     Icon(
                         Icons.Default.Add,
                         contentDescription = "Tambah Item",
-                        tint = MaterialTheme.colorScheme.primary // Warna ikon tambah
+                        tint = MaterialTheme.colorScheme.primary 
                     )
                 }
             }
@@ -136,25 +136,25 @@ fun CheckListScreen(
     if (showDialog) {
         AlertDialog(
             onDismissRequest = {
-                // Aksi saat dialog ditutup (misal: klik di luar dialog atau tombol back)
+                
                 showDialog = false
             },
             title = {
-                Text(text = "Konfirmasi Hapus", color = MaterialTheme.colorScheme.onSurface) // Warna teks
+                Text(text = "Konfirmasi Hapus", color = MaterialTheme.colorScheme.onSurface) 
             },
             text = {
-                Text(text = "Apakah Anda yakin ingin menghapus item '${itemToDelete?.title}'?", color = MaterialTheme.colorScheme.onSurfaceVariant) // Warna teks
+                Text(text = "Apakah Anda yakin ingin menghapus item '${itemToDelete?.title}'?", color = MaterialTheme.colorScheme.onSurfaceVariant) 
             },
             confirmButton = {
                 TextButton(
                     onClick = {
-                        // Aksi saat tombol "Hapus" ditekan
+                        
                         itemToDelete?.let { item ->
                             viewModel.onEvent(CheckListEvent.OnDeleteItem(item))
                         }
                         showDialog = false
                     },
-                    colors = ButtonDefaults.textButtonColors(contentColor = MaterialTheme.colorScheme.error) // Warna tombol hapus
+                    colors = ButtonDefaults.textButtonColors(contentColor = MaterialTheme.colorScheme.error) 
                 ) {
                     Text("Hapus")
                 }
@@ -162,15 +162,15 @@ fun CheckListScreen(
             dismissButton = {
                 TextButton(
                     onClick = {
-                        // Aksi saat tombol "Batal" ditekan
+                        
                         showDialog = false
                     },
-                    colors = ButtonDefaults.textButtonColors(contentColor = MaterialTheme.colorScheme.onSurfaceVariant) // Warna tombol batal
+                    colors = ButtonDefaults.textButtonColors(contentColor = MaterialTheme.colorScheme.onSurfaceVariant) 
                 ) {
                     Text("Batal")
                 }
             },
-            containerColor = MaterialTheme.colorScheme.surface // Warna background dialog
+            containerColor = MaterialTheme.colorScheme.surface 
         )
     }
 
@@ -179,12 +179,12 @@ fun CheckListScreen(
             onDismissRequest = { showEditDialog = false },
             title = { Text(text = "Ubah Riwayat") },
             text = {
-                // TextField di dalam dialog untuk mengubah judul
+                
                 OutlinedTextField(
                     value = editText,
                     onValueChange = { editText = it },
                     label = { Text("Judul Baru") },
-                    colors = TextFieldDefaults.outlinedTextFieldColors( // Warna OutlinedTextField
+                    colors = TextFieldDefaults.outlinedTextFieldColors( 
                         focusedBorderColor = MaterialTheme.colorScheme.primary,
                         unfocusedBorderColor = MaterialTheme.colorScheme.outline,
                         cursorColor = MaterialTheme.colorScheme.primary,
@@ -192,7 +192,7 @@ fun CheckListScreen(
                         focusedLabelColor = MaterialTheme.colorScheme.primary,
                         unfocusedLabelColor = MaterialTheme.colorScheme.onSurfaceVariant.copy(alpha = 0.6f)
                     ),
-                    shape = RoundedCornerShape(8.dp) // Sudut membulat
+                    shape = RoundedCornerShape(8.dp) 
                 )
             },
             confirmButton = {
@@ -203,19 +203,19 @@ fun CheckListScreen(
                         }
                         showEditDialog = false
                     },
-                    colors = ButtonDefaults.textButtonColors(contentColor = MaterialTheme.colorScheme.primary) // Warna tombol simpan
+                    colors = ButtonDefaults.textButtonColors(contentColor = MaterialTheme.colorScheme.primary) 
                 ) {
                     Text("Simpan")
                 }
             },
             dismissButton = {
                 TextButton(onClick = { showEditDialog = false },
-                    colors = ButtonDefaults.textButtonColors(contentColor = MaterialTheme.colorScheme.onSurfaceVariant) // Warna tombol batal
+                    colors = ButtonDefaults.textButtonColors(contentColor = MaterialTheme.colorScheme.onSurfaceVariant) 
                 ) {
                     Text("Batal")
                 }
             },
-            containerColor = MaterialTheme.colorScheme.surface // Warna background dialog
+            containerColor = MaterialTheme.colorScheme.surface 
         )
     }
 }
@@ -231,7 +231,7 @@ fun ChecklistItemRow(
     Row(
         modifier = Modifier
             .fillMaxWidth()
-            .clickable { onCheckedChange(!item.isChecked) } // Klik di mana saja pada row akan mengubah status
+            .clickable { onCheckedChange(!item.isChecked) } 
             .padding(vertical = 8.dp),
         verticalAlignment = Alignment.CenterVertically
     ) {

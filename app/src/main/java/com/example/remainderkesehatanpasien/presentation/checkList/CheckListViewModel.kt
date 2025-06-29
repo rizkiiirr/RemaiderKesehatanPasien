@@ -18,7 +18,7 @@ data class CheckListState(
     val items: List<CheckListItem> = emptyList()
 )
 
-// Sealed class untuk semua event/aksi yang bisa dilakukan pengguna di layar
+
 sealed class CheckListEvent{
     data class OnItemCheckedChange(val item: CheckListItem) : CheckListEvent()
     data class OnDeleteItem(val item: CheckListItem) : CheckListEvent()
@@ -27,7 +27,7 @@ sealed class CheckListEvent{
     object OnAddItem : CheckListEvent()
 }
 
-// Sealed class untuk event sekali jalan ke UI (seperti Snackbar)
+
 
 sealed class UIEvent{
     data class ShowSnackbar(val message: String): UIEvent()
@@ -41,7 +41,7 @@ class CheckListViewModel @Inject constructor(
     private val _state = mutableStateOf(CheckListState())
     val state: State<CheckListState> = _state
 
-    // State untuk menampung teks yang diketik pengguna di TextField untuk item baru
+    
     private val _newItemTitle = mutableStateOf("")
     val newItemTitle: State<String> = _newItemTitle
 
@@ -49,7 +49,7 @@ class CheckListViewModel @Inject constructor(
     val eventFlow = _eventFlow.asSharedFlow()
 
     init{
-        // Langsung ambil semua item checklist saat ViewModel ini dibuat
+        
         getItems()
     }
 
@@ -62,7 +62,7 @@ class CheckListViewModel @Inject constructor(
             }.launchIn(viewModelScope)
     }
 
-    // Fungsi utama untuk menerima semua event dari UI
+    
     fun onEvent(event: CheckListEvent){
         when (event){
             is CheckListEvent.OnItemCheckedChange -> {
@@ -76,7 +76,7 @@ class CheckListViewModel @Inject constructor(
                 viewModelScope.launch{
                     try{
                         checkListUseCases.addItem(newItemTitle.value)
-                        // Jika berhasil, kosongkan textfield
+                        
                         _newItemTitle.value = ""
                     } catch (e: Exception){
                         _eventFlow.emit(UIEvent.ShowSnackbar(e.message ?: "Input tidak valid"))

@@ -9,11 +9,10 @@ class LoginUserUseCase(
 ) {
     @Throws(InvalidInputException::class)
     suspend operator fun invoke(email: String, passwordHash: String): User? {
-        // Lakukan validasi input di sini
         if (email.isBlank() || !android.util.Patterns.EMAIL_ADDRESS.matcher(email).matches()) {
             throw InvalidInputException("Email tidak valid.")
         }
-        if (passwordHash.length < 6) { // Asumsi passwordHash sudah di-hash (panjang minimal 6 karakter)
+        if (passwordHash.length < 6) {
             throw InvalidInputException("Password minimal 6 karakter.")
         }
         return userRepository.loginUser(email, passwordHash)
