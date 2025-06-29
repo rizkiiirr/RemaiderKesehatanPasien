@@ -30,18 +30,13 @@ class NewsViewModel @Inject constructor(
 
     private var getNewsJob: Job? = null
 
-    
-    
-    
-    
     private val API_KEY = "881322c0c0f64c2d812cb62c2e0d6860" 
 
     init {
         
-        getHealthNews("kesehatan") 
+        getHealthNews("technology")
     }
 
-    
     fun getHealthNews(query: String) {
         getNewsJob?.cancel() 
 

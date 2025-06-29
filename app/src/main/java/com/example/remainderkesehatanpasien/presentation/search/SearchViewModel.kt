@@ -24,11 +24,6 @@ class SearchViewModel @Inject constructor(
 ) : ViewModel() {
     private val _searchQuery = MutableStateFlow("")
     val searchQuery = _searchQuery.asStateFlow()
-
-    
-    
-    
-    
     val searchResults = searchQuery
         .flatMapLatest { query ->
             searchUseCase(query)

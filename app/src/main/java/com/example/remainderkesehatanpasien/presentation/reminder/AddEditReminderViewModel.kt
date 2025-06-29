@@ -99,7 +99,6 @@ class AddEditReminderViewModel @Inject constructor(
                         val localDateTime = LocalDateTime.of(state.value.reminderDate, state.value.reminderTime)
                         val instant = localDateTime.atZone(ZoneId.systemDefault()).toInstant()
                         val timeInMillis = instant.toEpochMilli()
-
                         val newReminder = Reminder(
                             id = state.value.currentReminderId, 
                             title = state.value.title,

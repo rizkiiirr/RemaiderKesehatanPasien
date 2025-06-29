@@ -56,7 +56,6 @@ fun ReminderListScreen(
     val state by viewModel.state.collectAsState()
     val category = viewModel.category
 
-    
     var showDeleteDialog by remember { mutableStateOf(false) }
     var reminderToDelete by remember { mutableStateOf<Reminder?>(null) }
 

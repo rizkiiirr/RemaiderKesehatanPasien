@@ -27,7 +27,6 @@ data class ReminderListState(
     val reminder: List<Reminder> = emptyList()
 )
 
-
 sealed class ReminderEvent{
     data class OnDeleteReminder(val reminder: Reminder) : ReminderEvent()
     
@@ -78,7 +77,6 @@ class ReminderViewModel @Inject constructor(
         _showDeleteDialog.value = false
     }
 
-    
     fun onConfirmDelete() {
         viewModelScope.launch {
             _reminderToDelete.value?.let { reminder ->

@@ -12,7 +12,6 @@ import kotlinx.coroutines.flow.*
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
-
 data class NoteListState(val notes: List<Note> = emptyList())
 data class NoteTextFieldState(val text: String = "", val hint: String = "")
 

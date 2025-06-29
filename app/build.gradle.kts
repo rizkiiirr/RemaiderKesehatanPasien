@@ -2,13 +2,10 @@ plugins {
     alias(libs.plugins.android.application)
     alias(libs.plugins.kotlin.android)
     alias(libs.plugins.kotlin.compose)
-
-    // HAPUS -> alias(libs.plugins.kotlin.compose) // Baris ini mungkin tidak benar
-
-    id("kotlin-kapt") // <-- TAMBAHKAN INI
+    alias(libs.plugins.google.gms.google.services)
+    id("kotlin-kapt")
     id("com.google.dagger.hilt.android")
     id("com.google.firebase.crashlytics")
-    alias(libs.plugins.google.gms.google.services) // <-- TAMBAHKAN INI JUGA
 }
 
 android {
@@ -70,13 +67,13 @@ dependencies {
     implementation(libs.androidx.foundation)
     implementation(libs.coil.compose)
 
-    // Dependensi Room (Database) - Ini sudah benar
+    // Dependensi Room (Database)
     implementation("androidx.room:room-runtime:2.6.1")
     implementation("androidx.room:room-ktx:2.6.1")
     implementation(libs.firebase.analytics)
     kapt("androidx.room:room-compiler:2.6.1")
 
-    // Dependensi Hilt (Dependency Injection) - <-- TAMBAHKAN INI
+    // Dependensi Hilt (Dependency Injection)
     implementation("com.google.dagger:hilt-android:2.48")
     kapt("com.google.dagger:hilt-android-compiler:2.48")
     implementation("androidx.hilt:hilt-navigation-compose:1.2.0")
@@ -105,16 +102,15 @@ dependencies {
     // Import Firebase BoM (Bill of Materials)
     implementation(platform("com.google.firebase:firebase-bom:33.16.0"))
 
-// Dependency untuk Analytics (seharusnya sudah ditambahkan oleh alat bantu)
+    // Dependency untuk Analytics (seharusnya sudah ditambahkan oleh alat bantu)
     implementation("com.google.firebase:firebase-analytics")
 
-// Dependency untuk Crashlytics
+    // Dependency untuk Crashlytics
     implementation("com.google.firebase:firebase-crashlytics")
     implementation("com.google.firebase:firebase-database-ktx")
 
 }
 
-// Tambahkan blok ini di bagian paling bawah file untuk Hilt
 kapt {
     correctErrorTypes = true
 }

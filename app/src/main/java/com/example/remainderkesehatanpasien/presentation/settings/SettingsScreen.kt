@@ -1,6 +1,5 @@
 package com.example.remainderkesehatanpasien.presentation.settings
 
-import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
@@ -56,11 +55,8 @@ fun SettingsScreen(
     darkMode: Boolean,
     onToggleDarkMode: (Boolean) -> Unit,
     onLoginSecurityClicked: () -> Unit,
-    onNotificationsEnabled: (Boolean) -> Unit,
     onLogoutClicked: () -> Unit,
 ){
-    var notificationsEnabled by rememberSaveable { mutableStateOf(true) }
-
     Column (
         Modifier
             .fillMaxSize()
@@ -118,25 +114,6 @@ fun SettingsScreen(
                         fontWeight = FontWeight.Bold
                     )
                 }
-
-                Column(modifier = Modifier
-                    .height(50.dp)
-                    .padding(start = 8.dp)
-                    .weight(0.15f),
-                    verticalArrangement = Arrangement.Center,
-                    horizontalAlignment = Alignment.Start
-                ) {
-                    Image(
-                        painter = painterResource(id = R.drawable.account),
-                        contentDescription = null,
-                        modifier = Modifier
-                            .width(50.dp)
-                            .height(50.dp)
-                            .clickable {
-                                onProfileClicked()
-                            }
-                    )
-                }
             }
         }
 
@@ -155,7 +132,6 @@ fun SettingsScreen(
             onClick = onLoginSecurityClicked 
         )
 
-        
         SettingCategoryHeader("Preferensi")
         SettingsSwitchItem(
             icon = Icons.Default.Palette,
@@ -163,7 +139,6 @@ fun SettingsScreen(
             checked = darkMode,
             onCheckedChange = { isChecked -> onToggleDarkMode(isChecked) }
         )
-
         
         Spacer(modifier = Modifier.height(24.dp)) 
         SettingCategoryHeader("Lainnya") 
@@ -305,7 +280,6 @@ fun SettingsPreview(){
             darkMode = previewDarkMode,
             onToggleDarkMode = { isChecked -> previewDarkMode = isChecked }, 
             onLoginSecurityClicked = {},
-            onNotificationsEnabled = { isEnabled -> /* do nothing for preview */ }, 
             onLogoutClicked = {}
         )
     }

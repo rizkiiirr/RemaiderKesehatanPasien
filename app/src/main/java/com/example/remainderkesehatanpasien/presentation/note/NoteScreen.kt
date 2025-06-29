@@ -18,9 +18,6 @@ import com.example.remainderkesehatanpasien.presentation.note.NoteViewModel
 import com.example.remainderkesehatanpasien.presentation.note.UiEvent
 import kotlinx.coroutines.flow.collectLatest
 
-
-
-
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun NoteScreen(

@@ -166,7 +166,6 @@ fun ProfileScreen(
     }
 }
 
-
 @Composable
 fun ProfileImagePicker(
     imageUrl: String?, 
@@ -205,7 +204,6 @@ fun ProfileImagePicker(
         )
     }
 }
-
 
 @Preview(showBackground = true, showSystemUi = true)
 @Composable

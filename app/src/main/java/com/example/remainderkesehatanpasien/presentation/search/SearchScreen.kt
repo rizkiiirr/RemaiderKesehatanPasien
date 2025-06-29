@@ -130,7 +130,6 @@ fun SearchScreen(
     }
 }
 
-
 @Composable
 fun SearchItem(
     item: SearchableItem,

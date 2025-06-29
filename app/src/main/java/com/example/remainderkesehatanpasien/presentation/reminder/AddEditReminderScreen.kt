@@ -58,7 +58,6 @@ fun AddEditReminderScreen(
 ) {
     val state by viewModel.state
     val context = LocalContext.current
-
     
     LaunchedEffect(key1 = true) {
         viewModel.eventFlow.collectLatest { event ->
@@ -73,9 +72,7 @@ fun AddEditReminderScreen(
         }
     }
 
-    
     val calendar = Calendar.getInstance()
-    
     val datePickerDialog = DatePickerDialog(
         context,
         { _: DatePicker, year: Int, month: Int, dayOfMonth: Int ->
@@ -180,7 +177,6 @@ fun AddEditReminderScreen(
                     color = MaterialTheme.colorScheme.onSurface 
                 )
             }
-
             
             Row(
                 modifier = Modifier
@@ -196,7 +192,6 @@ fun AddEditReminderScreen(
                     )
             }
 
-            
             Row(
                 modifier = Modifier.fillMaxWidth(),
                 verticalAlignment = Alignment.CenterVertically,

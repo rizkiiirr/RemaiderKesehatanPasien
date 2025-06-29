@@ -102,7 +102,6 @@ fun NavigationApp(
                     darkMode = darkMode,
                     onToggleDarkMode = onToggleDarkMode,
                     onLoginSecurityClicked = { navController.navigate(Route.ChangePassword.path) },
-                    onNotificationsEnabled = { isEnabled -> /* TODO: Implement actual notification toggle logic */ },
                     onLogoutClicked = {
                         authViewModel.logoutUser()
                         navController.navigate(

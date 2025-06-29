@@ -17,12 +17,10 @@ import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
-
 sealed class ProfileUiEvent {
     data class ShowSnackbar(val message: String) : ProfileUiEvent()
     object SaveProfileSuccess : ProfileUiEvent()
 }
-
 
 sealed class ProfileFormEvent {
     data class EnteredName(val value: String) : ProfileFormEvent()
@@ -137,7 +135,6 @@ class ProfileViewModel @Inject constructor(
             ProfileFormEvent.SaveProfile -> saveProfile()
         }
     }
-
     private fun saveProfile() {
         viewModelScope.launch {
             currentUserEmail?.let { currentEmail ->
@@ -151,9 +148,7 @@ class ProfileViewModel @Inject constructor(
                     username = username,
                     fullName = name,
                     profileImageUrl = profileImageUrl 
-                    
-                    
-                    
+
                 )
                 try {
                     userRepository.updateUser(updatedUser)
