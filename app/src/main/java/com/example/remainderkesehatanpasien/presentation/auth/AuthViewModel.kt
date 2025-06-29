@@ -1,10 +1,12 @@
 package com.example.remainderkesehatanpasien.presentation.auth
 
+import android.content.res.Resources
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.example.remainderkesehatanpasien.R
 import com.example.remainderkesehatanpasien.domain.InvalidInputException
 import com.example.remainderkesehatanpasien.domain.manager.SessionManager
 import com.example.remainderkesehatanpasien.domain.usecase.LoginUserUseCase
@@ -34,7 +36,9 @@ sealed class AuthUiEvent {
 class AuthViewModel @Inject constructor(
     private val registerUserUseCase: RegisterUserUseCase,
     private val loginUserUseCase: LoginUserUseCase,
-    private val sessionManager: SessionManager
+    private val sessionManager: SessionManager,
+    private val resources: Resources
+
 ) : ViewModel() {
 
     var registerEmail by mutableStateOf(AuthTextFieldState())
@@ -105,18 +109,18 @@ class AuthViewModel @Inject constructor(
                     sessionManager.setUser(registeredUser)
                     _uiEvent.emit(AuthUiEvent.RegistrationSuccess)
                 } else {
-                    _uiEvent.emit(AuthUiEvent.ShowSnackbar("Email sudah terdaftar!"))
+                    _uiEvent.emit(AuthUiEvent.ShowSnackbar(resources.getString(R.string.email_already_exists)))
                 }
             } catch (e: InvalidInputException) {
                 when (e.message) {
-                    "Email tidak valid." -> registerEmail = registerEmail.copy(error = e.message)
-                    "Nama pengguna tidak boleh kosong." -> registerUsername = registerUsername.copy(error = e.message)
-                    "Nama lengkap tidak boleh kosong." -> registerFullName = registerFullName.copy(error = e.message)
-                    "Password minimal 6 karakter." -> registerPassword = registerPassword.copy(error = e.message)
-                    else -> _uiEvent.emit(AuthUiEvent.ShowSnackbar(e.message ?: "Terjadi kesalahan saat registrasi."))
+                    resources.getString(R.string.error_invalid_email) -> registerEmail = registerEmail.copy(error = resources.getString(R.string.error_invalid_email))
+                    resources.getString(R.string.error_username_empty) -> registerUsername = registerUsername.copy(error = resources.getString(R.string.error_username_empty))
+                    resources.getString(R.string.error_fullname_empty) -> registerFullName = registerFullName.copy(error = resources.getString(R.string.error_fullname_empty))
+                    resources.getString(R.string.error_password_min_length) -> registerPassword = registerPassword.copy(error = resources.getString(R.string.error_password_min_length))
+                    else -> _uiEvent.emit(AuthUiEvent.ShowSnackbar(resources.getString(R.string.error_registration_unknown)))
                 }
             } catch (e: Exception) {
-                _uiEvent.emit(AuthUiEvent.ShowSnackbar("Terjadi kesalahan tak terduga: ${e.message}"))
+                _uiEvent.emit(AuthUiEvent.ShowSnackbar(resources.getString(R.string.error_unexpected, e.message ?: "Unknown error")))
             }
         }
     }
@@ -135,16 +139,16 @@ class AuthViewModel @Inject constructor(
                     sessionManager.setUser(user)
                     _uiEvent.emit(AuthUiEvent.LoginSuccess)
                 } else {
-                    _uiEvent.emit(AuthUiEvent.ShowSnackbar("Email atau password salah!"))
+                    _uiEvent.emit(AuthUiEvent.ShowSnackbar(resources.getString(R.string.error_invalid_credentials)))
                 }
             } catch (e: InvalidInputException) {
                 when (e.message) {
-                    "Email tidak valid." -> loginEmail = loginEmail.copy(error = e.message)
-                    "Password minimal 6 karakter." -> loginPassword = loginPassword.copy(error = e.message)
-                    else -> _uiEvent.emit(AuthUiEvent.ShowSnackbar(e.message ?: "Terjadi kesalahan saat login."))
+                    resources.getString(R.string.error_invalid_email) -> loginEmail = loginEmail.copy(error = resources.getString(R.string.error_invalid_email))
+                    resources.getString(R.string.error_password_min_length) -> loginPassword = loginPassword.copy(error = resources.getString(R.string.error_password_min_length))
+                    else -> _uiEvent.emit(AuthUiEvent.ShowSnackbar(resources.getString(R.string.error_login_unknown)))
                 }
             } catch (e: Exception) {
-                _uiEvent.emit(AuthUiEvent.ShowSnackbar("Terjadi kesalahan tak terduga: ${e.message}"))
+                _uiEvent.emit(AuthUiEvent.ShowSnackbar(resources.getString(R.string.error_unexpected, e.message ?: "Unknown error")))
             }
         }
     }

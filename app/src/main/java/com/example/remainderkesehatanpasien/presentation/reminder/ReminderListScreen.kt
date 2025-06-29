@@ -37,10 +37,12 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavController
+import com.example.remainderkesehatanpasien.R
 import com.example.remainderkesehatanpasien.presentation.navigation.Route
 import com.example.remainderkesehatanpasien.data.local.entity.Reminder
 import java.text.SimpleDateFormat
@@ -59,10 +61,16 @@ fun ReminderListScreen(
     var showDeleteDialog by remember { mutableStateOf(false) }
     var reminderToDelete by remember { mutableStateOf<Reminder?>(null) }
 
+    val appBarTitle = if (category == "OBAT") {
+        stringResource(R.string.reminder_title_medication)
+    } else {
+        stringResource(R.string.reminder_title_consultation)
+    }
+
     Scaffold(
         topBar = {
             TopAppBar(
-                title = { Text(if (category == "OBAT") "Jadwal Minum Obat" else "Jadwal Konsultasi") },
+                title = { Text(appBarTitle) },
                 colors = TopAppBarDefaults.topAppBarColors( 
                     containerColor = MaterialTheme.colorScheme.primary,
                     titleContentColor = MaterialTheme.colorScheme.onPrimary,
@@ -87,7 +95,7 @@ fun ReminderListScreen(
             }, containerColor = MaterialTheme.colorScheme.secondary, 
                contentColor = MaterialTheme.colorScheme.onSecondary
             ) {
-                Icon(Icons.Default.Add, contentDescription = "Tambah Jadwal")
+                Icon(Icons.Default.Add, contentDescription = stringResource(R.string.reminder_add_schedule))
             }
         }
     ){ innerPadding ->
@@ -123,8 +131,8 @@ fun ReminderListScreen(
     if (showDeleteDialog) {
         AlertDialog(
             onDismissRequest = { showDeleteDialog = false },
-            title = { Text(text = "Konfirmasi Hapus") },
-            text = { Text(text = "Apakah Anda yakin ingin menghapus pengingat '${reminderToDelete?.title}'?") },
+            title = { Text(text = stringResource(R.string.delete_confirmation_title)) },
+            text = { Text(text = stringResource(R.string.delete_confirmation_message, reminderToDelete?.title ?: "")) },
             confirmButton = {
                 TextButton(
                     onClick = {
@@ -133,12 +141,12 @@ fun ReminderListScreen(
                         showDeleteDialog = false
                     }
                 ) {
-                    Text("Hapus")
+                    Text(stringResource(R.string.button_delete))
                 }
             },
             dismissButton = {
                 TextButton(onClick = { showDeleteDialog = false }) {
-                    Text("Batal")
+                    Text(stringResource(R.string.button_cancel))
                 }
             }
         )
@@ -190,7 +198,8 @@ fun ReminderItem(
                         .height(4.dp)
                 )
                 Text(
-                    text = "Waktu: $formattedTime",
+                    text =
+                    stringResource(R.string.time_prefix, formattedTime),
                     style = MaterialTheme.typography.bodySmall,
                     color = MaterialTheme.colorScheme.onSurfaceVariant.copy(alpha = 0.7f) 
 
@@ -198,7 +207,7 @@ fun ReminderItem(
             }
             
             IconButton(onClick = onDeleteClick){
-                Icon(Icons.Default.Delete, contentDescription = "Hapus Jadwal")
+                Icon(Icons.Default.Delete, contentDescription = stringResource(R.string.delete_schedule))
             }
         }
     }

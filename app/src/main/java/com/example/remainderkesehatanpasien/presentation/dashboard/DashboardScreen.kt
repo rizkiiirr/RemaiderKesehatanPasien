@@ -57,7 +57,7 @@ import androidx.navigation.compose.rememberNavController
 import coil.compose.AsyncImage
 import com.example.remainderkesehatanpasien.R
 import com.example.remainderkesehatanpasien.domain.model.BottomNavigation
-import com.example.remainderkesehatanpasien.data.remote.Article
+import com.example.remainderkesehatanpasien.data.local.entity.Article
 import com.example.remainderkesehatanpasien.presentation.news.NewsState
 import com.example.remainderkesehatanpasien.presentation.news.NewsViewModel
 import com.example.remainderkesehatanpasien.ui.theme.RemainderKesehatanPasienTheme

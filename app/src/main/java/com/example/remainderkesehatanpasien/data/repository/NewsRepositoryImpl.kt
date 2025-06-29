@@ -1,7 +1,7 @@
 package com.example.remainderkesehatanpasien.data.repository
 
 import com.example.remainderkesehatanpasien.data.local.dao.NewsDao
-import com.example.remainderkesehatanpasien.data.remote.Article
+import com.example.remainderkesehatanpasien.data.local.entity.Article
 import com.example.remainderkesehatanpasien.data.remote.api.NewsApiService
 import com.example.remainderkesehatanpasien.domain.repository.NewsRepository
 import kotlinx.coroutines.flow.Flow

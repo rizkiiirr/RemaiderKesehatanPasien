@@ -1,4 +1,4 @@
-package com.example.remainderkesehatanpasien.data.remote
+package com.example.remainderkesehatanpasien.data.remote.source
 
 data class Source(
     val id: String?,

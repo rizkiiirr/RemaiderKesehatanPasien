@@ -1,8 +1,9 @@
-package com.example.remainderkesehatanpasien.data.remote
+package com.example.remainderkesehatanpasien.data.local.entity
 
 import androidx.room.Embedded
 import androidx.room.Entity
 import androidx.room.PrimaryKey
+import com.example.remainderkesehatanpasien.data.remote.source.Source
 
 @Entity(tableName = "articles")
 data class Article(

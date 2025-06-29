@@ -4,4 +4,27 @@
     <string name="reminder_description">Jangan sampai terlewat.</string>
     <string name="reminder_channel_name">Pengingat Kesehatan</string>
     <string name="reminder_channel_description">Notifikasi untuk jadwal obat dan konsultasi.</string>
+
+    //AuthViewModel
+    <string name="error_unexpected">Terjadi kesalahan tak terduga: %1$s</string>
+    <string name="error_registration_unknown">Terjadi kesalahan saat registrasi.</string>
+    <string name="error_login_unknown">Terjadi kesalahan saat login.</string>
+
+    <string name="email_already_exists">Email sudah terdaftar!</string>
+    <string name="error_invalid_email">Email tidak valid.</string>
+    <string name="error_username_empty">Nama pengguna tidak boleh kosong.</string>
+    <string name="error_fullname_empty">Nama lengkap tidak boleh kosong.</string>
+    <string name="error_password_min_length">Password minimal 6 karakter.</string>
+
+    <string name="error_invalid_credentials">Email atau password salah!</string>
+
+    //reminderListScreen
+    <string name="reminder_title_medication">Jadwal Minum Obat</string>
+    <string name="reminder_title_consultation">Jadwal Konsultasi</string>
+    <string name="reminder_add_schedule">Tambah Jadwal</string>
+    <string name="back_button">Kembali</string>
+    <string name="delete_schedule">Hapus Jadwal</string>
+    <string name="time_prefix">Waktu: %1$s</string> <string name="delete_confirmation_title">Konfirmasi Hapus</string>
+    <string name="delete_confirmation_message">Apakah Anda yakin ingin menghapus pengingat \'%1$s\'?</string> <string name="button_delete">Hapus</string>
+    <string name="button_cancel">Batal</string>
 </resources>

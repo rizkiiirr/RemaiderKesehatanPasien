@@ -11,7 +11,7 @@ import com.example.remainderkesehatanpasien.data.local.dao.UserDao
 import com.example.remainderkesehatanpasien.data.local.entity.CheckListItem
 import com.example.remainderkesehatanpasien.data.local.entity.Reminder
 import com.example.remainderkesehatanpasien.data.local.entity.User
-import com.example.remainderkesehatanpasien.data.remote.Article
+import com.example.remainderkesehatanpasien.data.local.entity.Article
 
 @Database(
     entities = [Note::class, User::class, CheckListItem::class, Reminder::class, Article::class],
