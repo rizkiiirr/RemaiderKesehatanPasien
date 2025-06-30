@@ -2,6 +2,7 @@ package com.example.remainderkesehatanpasien.di
 
 import android.app.Application
 import android.content.Context
+import android.content.res.Resources
 import androidx.room.Room
 import com.example.remainderkesehatanpasien.data.alarm.AlarmManagerReminderScheduler
 import com.example.remainderkesehatanpasien.data.alarm.ReminderScheduler
@@ -226,5 +227,11 @@ object AppModule {
         reminderRepository: ReminderRepository
     ): SearchUseCase {
         return SearchUseCase(noteRepository, checklistRepository, reminderRepository)
+    }
+
+    @Provides
+    @Singleton
+    fun provideResources(app: Application): Resources {
+        return app.resources
     }
 }
