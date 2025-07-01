@@ -107,8 +107,9 @@ dependencies {
 
     // Dependency untuk Crashlytics
     implementation("com.google.firebase:firebase-crashlytics")
-    implementation("com.google.firebase:firebase-database-ktx")
 
+    // Dependency untuk firebase database
+    implementation("com.google.firebase:firebase-database-ktx")
 }
 
 kapt {

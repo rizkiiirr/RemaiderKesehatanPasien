@@ -38,7 +38,8 @@ class NewsViewModel @Inject constructor(
     }
 
     fun getHealthNews(query: String) {
-        getNewsJob?.cancel() 
+        getNewsJob?.cancel()
+
 
         getNewsJob = getHealthNewsUseCase(query, API_KEY) 
             .onEach { result ->

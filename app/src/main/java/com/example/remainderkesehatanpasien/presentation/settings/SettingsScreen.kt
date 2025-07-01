@@ -148,13 +148,13 @@ fun SettingsScreen(
             onClick = onLogoutClicked 
         )
 
-        Button(
-            onClick = { throw RuntimeException("Test Crash dari Tombol Pengaturan") },
-            modifier = Modifier.padding(16.dp),
-            colors = ButtonDefaults.buttonColors(containerColor = MaterialTheme.colorScheme.error) 
-        ) {
-            Text("Tes Crash Aplikasi", color = MaterialTheme.colorScheme.onError)
-        }
+//        Button(
+//            onClick = { throw RuntimeException("Test Crash dari Tombol Pengaturan") },
+//            modifier = Modifier.padding(16.dp),
+//            colors = ButtonDefaults.buttonColors(containerColor = MaterialTheme.colorScheme.error)
+//        ) {
+//            Text("Tes Crash Aplikasi", color = MaterialTheme.colorScheme.onError)
+//        }
     }
 }
 
